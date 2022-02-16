@@ -1,7 +1,23 @@
-.. Sphinx-Performance documentation master file, created by
-   sphinx-quickstart on Tue Feb 15 11:42:18 2022.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. role:: underline
+    :class: underline
+
+.. only:: html
+
+   .. image:: https://img.shields.io/pypi/dm/sphinx-performance.svg
+       :target: https://pypi.python.org/pypi/sphinx-performance
+       :alt: Downloads
+   .. image:: https://img.shields.io/pypi/l/sphinx-performance.svg
+       :target: https://pypi.python.org/pypi/sphinx-performance
+       :alt: License
+   .. image:: https://img.shields.io/pypi/pyversions/sphinx-performance.svg
+       :target: https://pypi.python.org/pypi/sphinx-performance
+       :alt: Supported versions
+   .. image:: https://readthedocs.org/projects/sphinx-performance/badge/?version=latest
+       :target: https://readthedocs.org/projects/sphinx-performance/
+   .. image:: https://img.shields.io/pypi/v/sphinx-performance.svg
+       :target: https://pypi.python.org/pypi/sphinx-performance
+       :alt: PyPI Package latest release
+
 
 Sphinx-Performance
 ==================
@@ -32,11 +48,12 @@ It was created to answer questions like:
    :maxdepth: 3
    :caption: Contents:
 
+   installation
    cli
    test_projects/index
 
 Kudos
 -----
 This little tool borrows a lot of ideas from the
-`performance script <https://sphinxcontrib-needs.readthedocs.io/en/latest/performance/index.html>`_
+`performance script <https://sphinx-performance.readthedocs.io/en/latest/performance/index.html>`_
 of `Sphinx-Needs <https://sphinx-needs.com>`_.
