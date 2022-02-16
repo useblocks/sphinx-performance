@@ -48,7 +48,7 @@ Gets imported by **sphinx-performance** and must provide two variables:
 
 parameters
 ++++++++++
-Must be a ``dict``, where each **key** represents a parameter, which can be set by the use.
+Must be a ``dict``, where each **key** represents a parameter, which can be set by the user.
 Do not use any whitespace or characters, which are hard to use on a Commandline interface.
 
 The **value** represents a default value, which is taken, if the use does use the parameter.
@@ -58,10 +58,24 @@ The **value** represents a default value, which is taken, if the use does use th
      The ``value`` does not support multiple values.
      So a test project can only have one single, fix configuration by default.
 
+Example::
+
+    parameters = {
+        "sphinx": "4.2",
+        "pages": 10,
+        "dummies": 10
+    }
+
 info
 ++++
 Must be a ``dict``, is able to give additional information to the user.
 Helpful to e.g. calculate the overall amount of "dummies", which is the product of ``dummies_per_page x pages``.
+
+Example::
+
+    info = {
+        '#dummies': "{{dummies * pages}}"
+        }
 
 conf.template
 ~~~~~~~~~~~~~
