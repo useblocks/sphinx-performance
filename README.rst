@@ -1,4 +1,5 @@
-.. image:: https://github.com/useblocks/sphinx-preview/raw/main/docs/_static/sphinx_performance_logo.png
+.. image:: https://github.com/useblocks/sphinx-performance/raw/main/docs/_static/sphinx_performance_logo.png
+
    :align: center
    :width: 50%
    :target: https://sphinx-performance.readthedocs.io/en/latest/
@@ -13,7 +14,7 @@ See complete documentation at https://sphinx-performance.readthedocs.io/en/lates
 
 Showcase
 --------
-.. image:: https://github.com/useblocks/sphinx-preview/raw/main/docs/_static/sphinx_performance_showcase.gif
+.. image:: https://github.com/useblocks/sphinx-performance/raw/main/docs/_static/sphinx_performance_showcase.gif
    :align: center
    :width: 50%
    :target: https://sphinx-performance.readthedocs.io/en/latest/

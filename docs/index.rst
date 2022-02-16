@@ -20,6 +20,13 @@ It was created to answer questions like:
 .. image:: /_static/sphinx_performance_showcase.gif
    :align: center
 
+.. note::
+
+   Based on the used test project, **sphinx-performance** may install specific library versions
+   into the currently used Python environment.
+
+   It is a good idea to use virtual environments for **sphinx-performance** runs.
+
 
 .. toctree::
    :maxdepth: 3
@@ -28,10 +35,8 @@ It was created to answer questions like:
    cli
    test_projects/index
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+Kudos
+-----
+This little tool borrows a lot of ideas from the
+`performance script <https://sphinxcontrib-needs.readthedocs.io/en/latest/performance/index.html>`_
+of `Sphinx-Needs <https://sphinx-needs.com>`_.

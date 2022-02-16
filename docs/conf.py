@@ -59,5 +59,9 @@ html_theme_options = {
     'logo': 'sphinx_performance_logo.png',
     'logo_name': False,
     'github_user': 'useblocks',
-    'github_repo': 'phinx-performance',
+    'github_repo': 'sphinx-performance',
+    "github_banner": True,
+    "github_button": True,
+    "github_type": "star",
+    "fixed_sidebar": True,
 }

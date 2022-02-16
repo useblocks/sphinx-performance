@@ -1,6 +1,7 @@
 Needs
 =====
-A basic test project, with no extensions or specific themes.
+A `Sphinx-Needs <https://sphinx-needs.com>`_ specific project to test the performance with different
+amounts of needs and needtables.
 
 Parameters
 ----------
