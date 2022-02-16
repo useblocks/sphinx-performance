@@ -1,5 +1,5 @@
 parameters = {
-    "sphinx": "4.1",
+    "sphinx": "4.2",
     "dummies": 10,
     "pages": 10
 }

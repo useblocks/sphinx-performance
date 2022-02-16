@@ -7,7 +7,7 @@ To get a first help, type ``sphinx-performance --help``
 .. command-output:: sphinx-performance --help
 
 \-\-project
----------
+-----------
 ``--project`` allows to select a specific test project.
 
 This can be an integrated project or a path to a self defined project::
@@ -18,7 +18,7 @@ This can be an integrated project or a path to a self defined project::
 Default: ``basic``
 
 \-\-parallel
-----------
+------------
 Defines the amount of cores (Sphinx workers) to use for the build.
 
 Uses internally the Sphinx option ``-j``.
@@ -55,19 +55,19 @@ This ``--pages 1 --pages 5 --dummies 1 --dummies 20`` would run 4 tests with:
 
 
 \-\-debug
--------
+---------
 Shows the out put of Sphinx build and Python dependency installation step:
 
 .. command-output:: sphinx-performance --debug
 
 \-\-keep
-------
+--------
 Does not delete the created, temporary test folders and prints their location.
 
 .. command-output:: sphinx-performance --keep
 
 \-\-browser
----------
+-----------
 Opens each generated documentation in the browser after the build::
 
     sphinx-performance --browser
