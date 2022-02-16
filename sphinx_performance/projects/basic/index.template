@@ -5,8 +5,6 @@ Config
 ------
 :pages: {{pages}}
 :dummies: {{dummies}}
-:needs: {{needs}}
-:needtables: {{needtables}}
 :keep: {{keep}}
 :browser: {{browser}}
 :debug: {{debug}}

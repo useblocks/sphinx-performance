@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="64.670044mm"
+   height="27.94696mm"
+   viewBox="0 0 64.670044 27.94696"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20, custom)"
+   sodipodi:docname="sphinx_performane_logo.svg"
+   inkscape:export-filename="/home/daniel/workspace/sphinx/sphinx-performance/docs/_static/sphinx_performane_logo.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="0.98901497"
+     inkscape:cx="-96.055169"
+     inkscape:cy="69.766386"
+     inkscape:window-width="2560"
+     inkscape:window-height="1375"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient2991">
+      <stop
+         style="stop-color:#00d455;stop-opacity:1"
+         offset="0"
+         id="stop2987" />
+      <stop
+         style="stop-color:#d40055;stop-opacity:1"
+         offset="1"
+         id="stop2989" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2991"
+       id="linearGradient2993"
+       x1="76.540985"
+       y1="121.71701"
+       x2="120.27954"
+       y2="121.75337"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.94633837,0,0,1.0047863,3.6962311,-15.500125)" />
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter14297"
+       x="-0.31406413"
+       y="-0.34935597"
+       width="1.6279869"
+       height="1.6256614">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.43252718"
+         id="feGaussianBlur14299" />
+    </filter>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-63.384332,-87.723304)">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="63.373737"
+       y="95.681946"
+       id="text2739"><tspan
+         sodipodi:role="line"
+         id="tspan2737"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:10.5833px;font-family:'URW Gothic';-inkscape-font-specification:'URW Gothic, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         x="63.373737"
+         y="95.681946">Sphinx</tspan><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:10.5833px;font-family:'URW Gothic';-inkscape-font-specification:'URW Gothic, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         x="63.373737"
+         y="109.13084"
+         id="tspan4053" /><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:10.5833px;font-family:'URW Gothic';-inkscape-font-specification:'URW Gothic, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         x="63.373737"
+         y="122.57973"
+         id="tspan2741" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       x="62.73428"
+       y="104.30631"
+       id="text2739-3"><tspan
+         sodipodi:role="line"
+         id="tspan2737-6"
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:10.5833px;font-family:'URW Gothic';-inkscape-font-specification:'URW Gothic, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583"
+         x="62.73428"
+         y="104.30631">Performance</tspan><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.264583"
+         x="62.73428"
+         y="117.7552"
+         id="tspan4053-7" /><tspan
+         sodipodi:role="line"
+         style="stroke-width:0.264583"
+         x="62.73428"
+         y="130.98433"
+         id="tspan2741-5" /></text>
+    <rect
+       style="fill:url(#linearGradient2993);fill-opacity:1;fill-rule:evenodd;stroke:#333333;stroke-width:1.03851;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect2955"
+       width="63.174358"
+       height="5.5614963"
+       x="63.903587"
+       y="105.7715" />
+    <path
+       id="rect7033-3"
+       style="mix-blend-mode:normal;fill:#4d4d4d;stroke:#4d4d4d;stroke-width:0.571338;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter14297)"
+       d="m 80.567017,114.30993 2.402646,-4.76916 2.374187,4.80253 z"
+       sodipodi:nodetypes="cccc" />
+    <path
+       id="rect7033"
+       style="fill:#ffffff;stroke:#333333;stroke-width:0.571338;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m 79.315766,113.56318 2.402646,-4.76916 2.374187,4.80253 z"
+       sodipodi:nodetypes="cccc" />
+  </g>
+</svg>

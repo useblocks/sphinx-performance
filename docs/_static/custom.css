@@ -1,0 +1,5 @@
+div.highlight pre, table.highlighttable pre {
+	margin: 0;
+	max-height: 250px;
+	overflow: auto;
+}
