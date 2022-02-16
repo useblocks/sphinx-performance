@@ -13,8 +13,6 @@ python = "^3.6.2"
 click = "^8.0.3"
 rich = "^11.2.0"
 Jinja2 = "^3.0.3"
-tabulate = "^0.8.9"
-sphinxcontrib-programoutput = "^0.17"
 
 [tool.poetry.dev-dependencies]
 
