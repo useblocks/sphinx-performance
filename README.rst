@@ -1,6 +1,5 @@
 .. image:: https://github.com/useblocks/sphinx-performance/raw/main/docs/_static/sphinx_performance_logo.png
    :align: center
-   :width: 50%
    :target: https://sphinx-performance.readthedocs.io/en/latest/
    :alt: Sphinx-Performance
 
@@ -15,7 +14,6 @@ Showcase
 --------
 .. image:: https://github.com/useblocks/sphinx-performance/raw/main/docs/_static/sphinx_performance_showcase.gif
    :align: center
-   :width: 50%
    :target: https://sphinx-performance.readthedocs.io/en/latest/
    :alt: Sphinx-Preview
 
