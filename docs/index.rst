@@ -27,18 +27,18 @@ project setups.
 
 It was created to answer questions like:
 
-* How good does Sphinx scale?
-* Which impact has an extension to the build time?
+* How well does Sphinx scale?
+* What impact does a specific extension have to the build time?
 * Is there any different between two specific versions?
 * How huge is the benefit of using parallel build mode?
-* Which are the performance bottlenecks during a Sphinx build?
+* What are the performance bottlenecks during a Sphinx build?
 
 .. image:: /_static/sphinx_performance_showcase.gif
    :align: center
 
 .. note::
 
-   Based on the used test project, **sphinx-performance** may install specific library versions
+   Based on the test project used, **sphinx-performance** may install specific library versions
    into the currently used Python environment.
 
    It is a good idea to use virtual environments for **sphinx-performance** runs.
