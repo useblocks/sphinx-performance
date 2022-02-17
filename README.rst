@@ -4,7 +4,7 @@
    :alt: Sphinx-Performance
 
 
-CLI tool to measure the build time of different, free configurable Sphinx-Projects.
+CLI tool to measure the build time of different, freely configurable Sphinx-Projects.
 
 Docs
 ----
@@ -16,8 +16,3 @@ Showcase
    :align: center
    :target: https://sphinx-performance.readthedocs.io/en/latest/
    :alt: Sphinx-Preview
-
-
-
-
-
