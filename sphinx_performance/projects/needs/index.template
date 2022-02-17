@@ -17,7 +17,13 @@ Content
 
 .. toctree::
 
-{% for page in range(pages) %}
+{%- for page in range(pages) %}
    page_{{page}}
-{% endfor -%}
+{%- endfor -%}
+
+{%- if has_folders %}
+{%- for folder in range(folders) %}
+   folder_{{folder}}/index
+{%- endfor -%}
+{% endif -%}
 

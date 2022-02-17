@@ -63,7 +63,10 @@ Changelog
 ---------
 0.1.4
 ~~~~~
-:Released: under development
+:Released: 17.02.2022
+
+* Bugfix: "Need" project unique object-id calculation working with folders.
+* Bugfix: "Need" project defines all needed defaults now.
 
 0.1.3
 ~~~~~

@@ -74,6 +74,10 @@ class ProjectEnv:
                 console.print(f'Needed parameter "{needed_conf}" not provided by user and test project default')
                 passed = False
 
+        # We need some values later, so if they are not defined, lets already return.
+        if not passed:
+            return passed
+
         # Calculate some standard extra data, which is hard do get done via jinja2 in performance.py:
         # - amount of page files (depending on folders and depth)
         # - amount of index files (depending on folders and depth)
@@ -116,7 +120,7 @@ class ProjectEnv:
 
             self._render_file("page.template", file_path, title=title, page=p, **kwargs)
 
-    def _create_folders(self, folder_root: str, current_depth: int = 1) -> None:
+    def _create_folders(self, folder_root: str, current_depth: int = 1, counter=1) -> None:
         """
         Creates folders and needed rst-files in it.
         Depending up on "depth", sub-folders will be created as well.
@@ -128,9 +132,10 @@ class ProjectEnv:
         current_folder_path = os.path.join(self.target_path, folder_root)
 
         for f in range(self.project_config['folders']):
+            inner_counter = (f+1) * counter  # Calculate depth unique counter for id of need objects.
             new_folder_path = os.path.join(current_folder_path, f'folder_{f}')
             os.mkdir(new_folder_path)
-            self._create_pages(new_folder_path)
+            self._create_pages(new_folder_path, current_depth=current_depth, current_folder=inner_counter)
 
             index_path = os.path.join(new_folder_path, "index.rst")
             self._render_file("index.template", index_path)
@@ -138,7 +143,7 @@ class ProjectEnv:
             title = f"Index folder {f} depth {current_depth}"
             if current_depth < self.project_config['depth']:
                 self._render_file("index.template", index_path, has_folders=True, title=title)
-                self._create_folders(new_folder_path, current_depth + 1)
+                self._create_folders(new_folder_path, current_depth + 1, inner_counter + 1)
             else:
                 self._render_file("index.template", index_path, has_folders=False, title=title)
 
@@ -175,7 +180,7 @@ class ProjectEnv:
                 self._render_file("index.template", "index.rst", has_folders=False, title=title)
 
             # Render and create pages on test project "root"
-            self._create_pages()
+            self._create_pages(current_depth=0, current_folder=0)
 
             self._create_folders("", 1)
         end_time = time.time()
@@ -192,7 +197,7 @@ class ProjectEnv:
         total_count = 0
         max_size = 0
         max_file = ''
-        min_size = None
+        min_size = -1
         min_file = ''
 
         for dirpath, dirnames, filenames in os.walk(folder):
@@ -205,7 +210,7 @@ class ProjectEnv:
                     if size > max_size:
                         max_size = size
                         max_file = fp
-                    if min_size is None or min_size > size:
+                    if min_size < 0 or min_size > size:
                         min_size = size
                         min_file = fp
 
