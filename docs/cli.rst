@@ -74,6 +74,42 @@ Opens each generated documentation in the browser after the build::
 
 This sets also automatically ``--keep``.
 
+Commonly used parameters
+------------------------
+This is a list of parameters, which are supported by most test projects.
+
+--pages
+~~~~~~~
+Amount of pages per folder::
+
+    sphinx-performance --pages 20
+
+
+--folders
+~~~~~~~~~
+Amount of folders per folder depth::
+
+    sphinx-performance --folders 10 --pages 10
+
+This will create 10 sub-folders, each containing 10 pages.
+
+--depth
+~~~~~~~
+Folder depth.
+
+1 = Create folders once on root level
+
+2 = Create also folder again in folders of root level
+
+And so one.
+
+This means the amount of folders and files raises exponential::
+
+    sphinx-performance --pages 10 --folders 10 --depth 0  # 10 pages, 0 folders
+    sphinx-performance --pages 10 --folders 10 --depth 1  # 110 pages, 10 folders
+    sphinx-performance --pages 10 --folders 10 --depth 2  # 1110 pages, 100 folders
+
+
 
 
 

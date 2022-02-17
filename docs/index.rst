@@ -57,3 +57,26 @@ Kudos
 This little tool borrows a lot of ideas from the
 `performance script <https://sphinx-performance.readthedocs.io/en/latest/performance/index.html>`_
 of `Sphinx-Needs <https://sphinx-needs.com>`_.
+
+
+Changelog
+---------
+0.1.4
+~~~~~
+:Released: under development
+
+0.1.3
+~~~~~
+:Released: 17.02.2022
+
+* Improvement: More data (File amounts and sizes, build times, progress timer)
+* Improvement: Amount of folders can be defined
+* Improvement: Folder depth can be defined
+* Improvement: Folder support for test projects
+
+0.1.2
+~~~~~
+:Released: 16.02.2022
+
+* Initial version
+
