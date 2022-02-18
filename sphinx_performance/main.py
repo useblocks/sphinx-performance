@@ -10,6 +10,8 @@ import time
 
 import click
 import rich.table
+from rich.style import Style
+from rich import box
 
 from sphinx_performance.projectenv import ProjectEnv
 from sphinx_performance.utils import console
@@ -18,6 +20,7 @@ PROJECTS = {
     "basic": os.path.join(os.path.dirname(__file__), "projects", "basic"),
     "needs": os.path.join(os.path.dirname(__file__), "projects", "needs")
 }
+
 
 @click.command(context_settings=dict(
     ignore_unknown_options=True,
@@ -36,6 +39,7 @@ PROJECTS = {
 @click.option("--browser", is_flag=True, help="Opens the project in your browser")
 @click.option("--snakeviz", is_flag=True, help="Opens snakeviz view for measured profiles in browser")
 @click.option("--debug", is_flag=True, help="console.prints more information, incl. sphinx build output")
+@click.option("--temp", default=None, type=str, help="Base folder path to use for temp folders. Must exist.")
 @click.pass_context
 def cli(
     ctx,
@@ -46,6 +50,7 @@ def cli(
     browser=False,
     snakeviz=False,
     debug=False,
+    temp=None,
 ):
     """
     CLI handling
@@ -93,37 +98,83 @@ def cli(
     for build_config in build_configs:
         for project_config in project_configs:
             console.rule(f"[bold red]Run {counter}")
-            project = ProjectEnv(project_path, build_config, project_config)
+            project = ProjectEnv(project_path, build_config, project_config, temp)
             if not project.config_is_valid():
                 console.print('Errors in configuration. Skipping this run.')
                 continue
             project.prepare_project()
             project.install_dependencies()
-            result = project.build()
+
+            result, extra_results = project.build()
+
             project.post_processing()
-            config = {**project.project_config, **project.extra_info}
+
+            config = {**project.project_config}
             config['parallel'] = project.build_config['parallel']
-            results.append((config, result))
+            # config += {** project.extra_info}
+            results.append({
+                "result": result,
+                "config": config,
+                "info": project.extra_info,
+                "extra": extra_results})
             counter += 1
 
     console.rule("[bold red]RESULTS")
 
-    # Result table
-    table = rich.table.Table()
-    table.add_column('#', justify="center")
-    table.add_column('runtime\nseconds', justify="center")
-    for key in results[0][0].keys():
-        table.add_column(key, justify="center")
+    # Result matrix
+    matrix = []
+    headers = ['#', 'runtime']
+    headers.append("")
+    for key in results[0]['config'].keys():
+        headers.append(key)
+
+    headers.append("")
+    for key in results[0]['info'].keys():
+        headers.append(key)
+
+    headers.append("")
+    for key in results[0]['extra'].keys():
+        headers.append(key)
+
+    matrix.append(headers)
 
     run = 1
     for result in results:
-        values = [str(run), f"{result[1]:.2f}"] + [str(x) for x in result[0].values()]
-        table.add_row(*values)
+        values = [f'Run {str(run)}', f"{result['result']:.2f}"]
+        values += [""]
+        values += [str(x) for x in result['config'].values()]
+        values += [""]
+        values += [str(x) for x in result['info'].values()]
+        values += [""]
+        values += [str(x) for x in result['extra'].values()]
+        matrix.append([*values])
         run += 1
 
-    console.print(table)
+    matrix_transpose = list(map(list, zip(*matrix)))
 
-    overall_runtime = sum(x[1] for x in results)
+    topic_style = Style(bold=True)
+    runtime_style = Style(color='red', bold=True)
+    diff_style = Style(color="gold3", bold=True)
+
+    # Result table
+    table = rich.table.Table(box=box.ROUNDED)
+    for i, column in enumerate(matrix_transpose[0]):
+        if i == 0:
+            style = topic_style
+        else:
+            style = None
+        table.add_column(column, justify="center", style=style)
+
+    for i, row in enumerate(matrix_transpose[1:]):
+        style = None
+        if i == 0:
+            style = runtime_style
+        elif len(set(row[1:])) != 1:
+            style = diff_style
+        table.add_row(*row, style=style)
+
+    console.print(table)
+    overall_runtime = sum(x['result'] for x in results)
     console.print(f"\nOverall runtime: {overall_runtime:.2f} seconds.")
 
     if snakeviz:

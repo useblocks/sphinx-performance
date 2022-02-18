@@ -38,7 +38,7 @@ It was created to answer questions like:
 
 .. note::
 
-   Based on the test project used, **sphinx-performance** may install specific library versions
+   Based on the used test project, **sphinx-performance** may install specific library versions
    into the currently used Python environment.
 
    It is a good idea to use virtual environments for **sphinx-performance** runs.
@@ -61,6 +61,15 @@ of `Sphinx-Needs <https://sphinx-needs.com>`_.
 
 Changelog
 ---------
+0.1.5
+~~~~~
+:Released: 18.02.2022
+
+* Improvement: ``--temp`` parameter support
+* Improvement: Result tables highlights diffs
+* Improvement: More data for result tables
+* Bugfix: Unique Needs ID calculation
+
 0.1.4
 ~~~~~
 :Released: 17.02.2022

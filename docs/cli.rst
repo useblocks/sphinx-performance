@@ -36,6 +36,42 @@ Which parameters are need and how their defaults looks like are documented in th
 
 .. command-output:: sphinx-performance --pages 2 --dummies 5
 
+Commonly used parameters
+~~~~~~~~~~~~~~~~~~~~~~~~
+This is a list of parameters, which are supported by most test projects.
+
+\-\-pages
++++++++++
+Amount of pages per folder::
+
+    sphinx-performance --pages 20
+
+
+\-\-folders
++++++++++++
+Amount of folders per folder depth::
+
+    sphinx-performance --folders 10 --pages 10
+
+This will create 10 sub-folders, each containing 10 pages.
+
+\-\-depth
++++++++++
+Folder depth.
+
+1 = Create folders once on root level
+
+2 = Create also folder again in folders of root level
+
+And so one.
+
+This means the amount of folders and files raises exponential::
+
+    sphinx-performance --pages 10 --folders 10 --depth 0  # 10 pages, 0 folders
+    sphinx-performance --pages 10 --folders 10 --depth 1  # 110 pages, 10 folders
+    sphinx-performance --pages 10 --folders 10 --depth 2  # 1110 pages, 100 folders
+
+
 Parameter matrix
 ~~~~~~~~~~~~~~~~
 All project parameters can be set multiple times, so that tests gets executed for each given parameter.
@@ -52,6 +88,17 @@ This ``--pages 1 --pages 5 --dummies 1 --dummies 20`` would run 4 tests with:
 .. command-output:: sphinx-performance --pages 1 --pages 5 --dummies 1 --dummies 20
 
 
+\-\-temp
+--------
+Defines the location of the folder to use for creating the temporary test project folders.
+
+By default a operating system specific is chosen, on Linux this is ``/tmp``.
+
+``--temp`` can also be a relative path.
+
+So a ``sphinx-performance --temp .`` will create a test-folder like ``tmp0zmq3js2`` in the current working directory.
+
+Use ``--temp`` together with ``--keep``, to keep the test-folder at an easy accessible location.
 
 
 \-\-debug
@@ -73,42 +120,6 @@ Opens each generated documentation in the browser after the build::
     sphinx-performance --browser
 
 This sets also automatically ``--keep``.
-
-Commonly used parameters
-------------------------
-This is a list of parameters, which are supported by most test projects.
-
---pages
-~~~~~~~
-Amount of pages per folder::
-
-    sphinx-performance --pages 20
-
-
---folders
-~~~~~~~~~
-Amount of folders per folder depth::
-
-    sphinx-performance --folders 10 --pages 10
-
-This will create 10 sub-folders, each containing 10 pages.
-
---depth
-~~~~~~~
-Folder depth.
-
-1 = Create folders once on root level
-
-2 = Create also folder again in folders of root level
-
-And so one.
-
-This means the amount of folders and files raises exponential::
-
-    sphinx-performance --pages 10 --folders 10 --depth 0  # 10 pages, 0 folders
-    sphinx-performance --pages 10 --folders 10 --depth 1  # 110 pages, 10 folders
-    sphinx-performance --pages 10 --folders 10 --depth 2  # 1110 pages, 100 folders
-
 
 
 

@@ -23,9 +23,9 @@ Amount of needs: **{{needs}}**
 
 {% for n in range(needs) %}
 .. req:: Test Need Page {{ page }} {{n}}
-   :id: R_{{current_depth}}_{{current_folder}}_{{page}}_{{n}}
+   :id: R_{{global_page}}_{{n}}
 {% if not basic %}   :number: {{n}}{% endif %}
-   :links: R_{{current_depth}}_{{current_folder}}_{{page}}_{{needs-n-1}}
+   :links: R_{{global_page}}_{{needs-n-1}}
 {% endfor %}
 
 Needtable

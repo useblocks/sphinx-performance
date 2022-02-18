@@ -15,12 +15,17 @@ from sphinx_performance.utils import console
 
 NEED_CONFIG_DEFAULT = ['pages', 'folders', 'depth']
 
+GLOBAL_PAGE_COUNTER = 0  # Needed for unique IDs in recursive creation functions
+
 
 class ProjectEnv:
     """
     Handles all configurations for the test projects, creates them and finally calls the build.
     """
-    def __init__(self, project_path: str, build_config: str, project_config: str):
+    def __init__(self, project_path: str, build_config: str, project_config: str, temp: str = None):
+        if temp is not None and not os.path.exists(temp):
+            raise ProjectException(f'Given temp folder does not exist: {temp}')
+
         self.project_path = project_path
         self.build_config = build_config
         self.project_config = project_config
@@ -29,7 +34,7 @@ class ProjectEnv:
         self.source_path = project_path
         self.source_perf_conf_path = os.path.join(self.source_path, "performance.py")
 
-        self.target_path = tempfile.mkdtemp()
+        self.target_path = tempfile.mkdtemp(dir=temp)
         self.target_build_path = os.path.join(self.target_path, "_build")
         self.target_index_path = os.path.join(self.target_build_path, "index.html")
         self.target_req_path = os.path.join(self.target_path, "requirements.txt")
@@ -102,6 +107,9 @@ class ProjectEnv:
         :return: None
 
         """
+        global GLOBAL_PAGE_COUNTER
+        GLOBAL_PAGE_COUNTER += 1
+
         source_tmp_path = os.path.join(self.target_path, source)
         source_tmp_path_final = os.path.join(self.target_path, target)
         template = Template(Path(source_tmp_path).read_text())
@@ -109,6 +117,7 @@ class ProjectEnv:
                                    **self.build_config,
                                    **self.internal_data,
                                    has_folders=has_folders,
+                                   global_page=GLOBAL_PAGE_COUNTER,
                                    **kwargs)
         with open(source_tmp_path_final, "w") as file:
             file.write(rendered)
@@ -120,7 +129,7 @@ class ProjectEnv:
 
             self._render_file("page.template", file_path, title=title, page=p, **kwargs)
 
-    def _create_folders(self, folder_root: str, current_depth: int = 1, counter=1) -> None:
+    def _create_folders(self, folder_root: str, current_depth: int = 1) -> None:
         """
         Creates folders and needed rst-files in it.
         Depending up on "depth", sub-folders will be created as well.
@@ -132,10 +141,9 @@ class ProjectEnv:
         current_folder_path = os.path.join(self.target_path, folder_root)
 
         for f in range(self.project_config['folders']):
-            inner_counter = (f+1) * counter  # Calculate depth unique counter for id of need objects.
             new_folder_path = os.path.join(current_folder_path, f'folder_{f}')
             os.mkdir(new_folder_path)
-            self._create_pages(new_folder_path, current_depth=current_depth, current_folder=inner_counter)
+            self._create_pages(new_folder_path, current_depth=current_depth)
 
             index_path = os.path.join(new_folder_path, "index.rst")
             self._render_file("index.template", index_path)
@@ -143,7 +151,7 @@ class ProjectEnv:
             title = f"Index folder {f} depth {current_depth}"
             if current_depth < self.project_config['depth']:
                 self._render_file("index.template", index_path, has_folders=True, title=title)
-                self._create_folders(new_folder_path, current_depth + 1, inner_counter + 1)
+                self._create_folders(new_folder_path, current_depth + 1)
             else:
                 self._render_file("index.template", index_path, has_folders=False, title=title)
 
@@ -180,7 +188,7 @@ class ProjectEnv:
                 self._render_file("index.template", "index.rst", has_folders=False, title=title)
 
             # Render and create pages on test project "root"
-            self._create_pages(current_depth=0, current_folder=0)
+            self._create_pages(current_depth=0)
 
             self._create_folders("", 1)
         end_time = time.time()
@@ -305,9 +313,22 @@ class ProjectEnv:
             shutil.rmtree(self.target_build_path)
             shutil.rmtree(self.target_path)
 
-        return result_time
+        extra_results = {
+            'folder size': f'{size:.2f} kB',
+            '# files': f'{file_data["count"]}',
+            'avg file time': f'{time_per_file:.2f} s',
+            'avg file size': f'{size_per_file:.2f} kB',
+            'max file size': f'{max_size:.2f} kB',
+            'min file size': f'{min_size:.2f} kB',
+        }
+
+        return result_time, extra_results
 
     def post_processing(self):
         if self.build_config['browser']:
             with suppress(Exception):
                 webbrowser.open_new_tab(self.target_index_path)
+
+
+class ProjectException(BaseException):
+    pass

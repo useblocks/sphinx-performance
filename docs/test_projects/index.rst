@@ -51,7 +51,7 @@ parameters
 Must be a ``dict``, where each **key** represents a parameter, which can be set by the user.
 Do not use any whitespace or characters, which are hard to use on a Commandline interface.
 
-The **value** represents a default value, which is taken, if the use does use the parameter.
+The **value** represents a default value, which is taken, if the user does use the parameter.
 
 .. hint::
 
