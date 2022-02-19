@@ -2,6 +2,7 @@
 Executes several performance tests.
 
 """
+import csv
 import itertools
 import os.path
 import subprocess
@@ -35,22 +36,26 @@ PROJECTS = {
     multiple=True,
     help="Number of parallel processes to use. Same as -j for sphinx-build",
 )
+@click.option("--builder", default=['html'], multiple=True, help="Keeps the temporary src and build folders")
 @click.option("--keep", is_flag=True, help="Keeps the temporary src and build folders")
 @click.option("--browser", is_flag=True, help="Opens the project in your browser")
 @click.option("--snakeviz", is_flag=True, help="Opens snakeviz view for measured profiles in browser")
 @click.option("--debug", is_flag=True, help="console.prints more information, incl. sphinx build output")
 @click.option("--temp", default=None, type=str, help="Base folder path to use for temp folders. Must exist.")
+@click.option("--csv", 'csv_file', default=None, type=str, help="CSV file path, which shall store the results.")
 @click.pass_context
 def cli(
     ctx,
     project,
     profile,
     parallel,
+    builder,
     keep=False,
     browser=False,
     snakeviz=False,
     debug=False,
     temp=None,
+    csv_file=None
 ):
     """
     CLI handling
@@ -77,14 +82,16 @@ def cli(
         project_kwargs[name].append(value)
 
     if project_kwargs:
+        # Create project config test matrix
         keys, values = zip(*project_kwargs.items())
         project_configs = [dict(zip(keys, v)) for v in itertools.product(*values)]
     else:
         project_configs = [{}]
 
-    build_kwargs = {"parallel": list(parallel), "keep": [keep], "browser": [browser], "snakeviz": [snakeviz],
-                    "debug": [debug]}
+    build_kwargs = {"builder": builder, "parallel": list(parallel), "keep": [keep], "browser": [browser],
+                    "snakeviz": [snakeviz], "debug": [debug]}
 
+    # Create build test matrix
     keys, values = zip(*build_kwargs.items())
     build_configs = [dict(zip(keys, v)) for v in itertools.product(*values)]
 
@@ -111,6 +118,7 @@ def cli(
 
             config = {**project.project_config}
             config['parallel'] = project.build_config['parallel']
+            config['builder'] = project.build_config['builder']
             # config += {** project.extra_info}
             results.append({
                 "result": result,
@@ -176,6 +184,17 @@ def cli(
     console.print(table)
     overall_runtime = sum(x['result'] for x in results)
     console.print(f"\nOverall runtime: {overall_runtime:.2f} seconds.")
+
+    if csv_file:
+        try:
+            with open(csv_file, 'w') as f:
+                writer = csv.writer(f, delimiter=",", quotechar="|")
+                for row in matrix_transpose:
+                    writer.writerow(row)
+        except csv.Error as e:
+            console.print(f'Error during storing csv file: {csv_file}. Reason: {e}')
+        else:
+            console.print(f'CSV file stored: {csv_file}')
 
     if snakeviz:
         console.print("\nStarting snakeviz servers\n")

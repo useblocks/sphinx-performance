@@ -28,6 +28,17 @@ multiple pages.
 
 .. command-output:: sphinx-performance --parallel 1 --parallel 4 --pages 30
 
+\-\-builder
+-----------
+Defines the builder to use, for instance ``html``, ``text``, ``json``, ``xml``.
+
+Type ``make`` in a sphinx project folder so see all available builders.
+
+Can be used multiple times, so that for each builder a specific test run gets executed.
+
+.. command-output:: sphinx-performance --pages 2 --builder html --builder text
+
+
 Project parameters
 ------------------
 **sphinx-performance** takes every project parameters and provides it to the test project.
@@ -120,6 +131,14 @@ Opens each generated documentation in the browser after the build::
     sphinx-performance --browser
 
 This sets also automatically ``--keep``.
+
+\-\-csv
+-------
+Stores the result table in a given CSV-file
+
+If the file exists, it gets overwritten:
+
+   sphinx-performance --csv results.csv
 
 
 

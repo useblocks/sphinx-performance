@@ -169,6 +169,7 @@ class ProjectEnv:
 
         conf_str = ', '.join([f'{key}: {value}' for key, value in self.project_config.items()])
         console.print(f"[bold]Core/s[/bold]:\t\t {self.build_config['parallel']}")
+        console.print(f"[bold]Builder[/bold]:\t {self.build_config['builder']}")
         console.print(f"[bold]Config[/bold]:\t\t {conf_str}")
         info_str = ', '.join([f'{key}: {value}' for key, value in self.extra_info.items()])
         console.print(f"[bold]Info[/bold]:\t\t {info_str}")
@@ -193,14 +194,14 @@ class ProjectEnv:
             self._create_folders("", 1)
         end_time = time.time()
         result_time = end_time - start_time
-        file_data = self._calculate_file_numbers(self.target_path, '.rst')
+        file_data = self._calculate_file_numbers(self.target_path, ['.md', '.rst'])
         size = file_data['size_kb']
         max_size = file_data['max_size_kb']
         data_str = f"{file_data['count']} rst files with {size:.2f} kB"
         console.print(f"[bold]Docs files[/bold]:\t {data_str}")
         console.print(f"[bold]Docs setup[/bold]:\t {result_time:.2f} s\n")
 
-    def _calculate_file_numbers(self, folder, file_type="rst"):
+    def _calculate_file_numbers(self, folder, file_types=["rst"]):
         total_size = 0
         total_count = 0
         max_size = 0
@@ -210,7 +211,8 @@ class ProjectEnv:
 
         for dirpath, dirnames, filenames in os.walk(folder):
             for f in filenames:
-                if os.path.splitext(f)[1] == file_type:
+                # Measure file size, if file type matches or if no file types are given
+                if not file_types or os.path.splitext(f)[1] in file_types:
                     total_count += 1
                     fp = os.path.join(dirpath, f)
                     size = os.path.getsize(fp)
@@ -261,10 +263,11 @@ class ProjectEnv:
             self.sphinx_path,
             "-a",
             "-E",
+            "-v",
             "-j",
             str(self.build_config['parallel']),
             "-b",
-            "html",
+            str(self.build_config['builder']),
             self.target_path,
             self.target_build_path,
         ]
@@ -281,30 +284,77 @@ class ProjectEnv:
             status_str = "Building documentation"
             status = console.status(status_str)
             with status:
-                process = subprocess.Popen(params, stdout=subprocess.DEVNULL)
+                # process = subprocess.Popen(params, stdout=subprocess.DEVNULL)
+                process = subprocess.Popen(params, stdout=subprocess.PIPE)
+
+                reading_start_time = None
+                reading_stop_time = None
+
+                writing_start_time = None
+                writing_stop_time = None
 
                 while True:
+
+                    # Measure reading and writing time
+                    line = process.stdout.readline()
+                    line = line.decode('utf8')
+                    if 'reading sources' in line:
+                        if reading_start_time is None:
+                            reading_start_time = time.time()
+                        reading_stop_time = time.time()
+
+                    if 'writing output' in line:
+                        if writing_start_time is None:
+                            writing_start_time = time.time()
+                        writing_stop_time = time.time()
+
+                    # Check if project has finished
                     if process.poll() is not None:
                         break
+
+                    # Update build time counter
                     current_time = time.time() - start_time
                     status.update(f'{status_str} {current_time:.2f} s')
-                    time.sleep(0.01)
+                    time.sleep(0.005)
 
         end_time = time.time()
 
-        file_data = self._calculate_file_numbers(self.target_build_path, '.html')
+        file_data = self._calculate_file_numbers(self.target_build_path, [])
         size = file_data['size_kb']
         max_size = file_data['max_size_kb']
         min_size = file_data['min_size_kb']
-        data_str = f"{file_data['count']} html files with {size:.2f} kB"
+        data_str = f"{file_data['count']} files with {size:.2f} kB"
+
+        if not self.build_config['debug']:
+            # Errors may happen here, if reading/writing could not be detected.
+            # Maybe because of different output based of other builders.
+            try:
+                reading_time = reading_stop_time - reading_start_time
+            except TypeError:
+                reading_time = 0
+            try:
+                writing_time = writing_stop_time - writing_start_time
+            except TypeError:
+                writing_time = 0
+        else:
+            reading_time = 0
+            writing_time = 0
+
         result_time = end_time - start_time
         console.print(f"\n[bold]Build files[/bold]:\t {data_str}")
         console.print(f"[bold]File max️[/bold]:\t  {max_size:.2f} kB by {file_data['max_file']}")
         console.print(f"[bold]File min[/bold]:\t {min_size:.2f} kB by {file_data['min_file']}")
 
-        time_per_file = result_time / file_data['count']
-        size_per_file = size / file_data['count']
+        if file_data['count']:
+            time_per_file = result_time / file_data['count']
+            size_per_file = size / file_data['count']
+        else:  # if no files got found
+            time_per_file = 0
+            size_per_file = 0
+
         console.print(f"[bold]File Ø[/bold]:\t\t {size_per_file:.2f} kB ({time_per_file:.2f} s)")
+        console.print(f"[bold]Reading time[/bold]:\t {reading_time:.2f} s")
+        console.print(f"[bold]Writing time[/bold]:\t {writing_time:.2f} s")
         console.print(f"[bold red]Build Duration[/bold red]:\t [bold red]{result_time:.2f} s")
 
         if not self.build_config['keep']:
@@ -314,6 +364,8 @@ class ProjectEnv:
             shutil.rmtree(self.target_path)
 
         extra_results = {
+            'reading time': f"{reading_time:.2f} s",
+            'writing time': f"{writing_time:.2f} s",
             'folder size': f'{size:.2f} kB',
             '# files': f'{file_data["count"]}',
             'avg file time': f'{time_per_file:.2f} s',

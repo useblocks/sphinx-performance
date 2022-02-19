@@ -61,6 +61,14 @@ of `Sphinx-Needs <https://sphinx-needs.com>`_.
 
 Changelog
 ---------
+0.1.6
+~~~~~
+:Released: under development
+
+* Improvement: Reading wand writing times get measured (ALPHA status).
+* Improvement: CSV export is possible by setting ``--csv results.csv``.
+* Improvement: Builder can be set, also multiple times: ``--builder json``.
+
 0.1.5
 ~~~~~
 :Released: 18.02.2022
