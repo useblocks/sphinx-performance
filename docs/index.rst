@@ -61,6 +61,12 @@ of `Sphinx-Needs <https://sphinx-needs.com>`_.
 
 Changelog
 ---------
+0.1.7
+~~~~~
+:Released: under development
+
+* Bugfix: Python bin/script calculation on windows fixed.
+
 0.1.6
 ~~~~~
 :Released: 21.02.2022
