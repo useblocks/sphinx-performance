@@ -42,7 +42,11 @@ class ProjectEnv:
         self.python_path = sys.executable
         self.bin_path = os.path.dirname(self.python_path)
         if os.name == 'nt':
-            self.bin_path = os.path.join(os.path.dirname(self.python_path), 'Scripts')
+            win_bin = os.path.join(os.path.dirname(self.python_path), 'Scripts')
+            # The "Scripts" seems to be used for py-installation on  system level.
+            # But in .venv, it works like on linux.
+            if os.path.exists(win_bin):
+                self.bin_path = win_bin
 
         self.pip_path = os.path.join(self.bin_path, 'pip')
         self.sphinx_path = os.path.join(self.bin_path, 'sphinx-build')
