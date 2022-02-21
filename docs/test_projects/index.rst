@@ -10,6 +10,7 @@ This is a list of Sphinx projects, which are available to be used as test projec
 
    basic
    needs
+   theme
 
 Own test projects
 -----------------

@@ -1,0 +1,12 @@
+sphinx=={{sphinx}}
+{% if theme == 'rtd' %}
+sphinx-rtd-theme
+{% elif theme == 'furo' %}
+furo
+{% elif theme == 'book' %}
+sphinx-book-theme
+{% elif theme == 'pydata' %}
+pydata-sphinx-theme
+{% elif theme == 'press' %}
+sphinx-press-theme
+{% endif %}

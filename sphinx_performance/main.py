@@ -19,7 +19,8 @@ from sphinx_performance.utils import console
 
 PROJECTS = {
     "basic": os.path.join(os.path.dirname(__file__), "projects", "basic"),
-    "needs": os.path.join(os.path.dirname(__file__), "projects", "needs")
+    "needs": os.path.join(os.path.dirname(__file__), "projects", "needs"),
+    "theme": os.path.join(os.path.dirname(__file__), "projects", "theme")
 }
 
 
