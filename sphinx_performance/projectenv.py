@@ -41,10 +41,20 @@ class ProjectEnv:
 
         self.python_path = sys.executable
         self.bin_path = os.path.dirname(self.python_path)
+        if os.name == 'nt':
+            self.bin_path = os.path.join(os.path.dirname(self.python_path), 'Scripts')
+
         self.pip_path = os.path.join(self.bin_path, 'pip')
         self.sphinx_path = os.path.join(self.bin_path, 'sphinx-build')
 
         self.extra_info = {}
+
+        # Some path checks
+        if not os.path.exists(self.pip_path):
+            raise FileNotFoundError(f'Could not found "pip" in calculated path: {self.pip_path}')
+
+        if not os.path.exists(self.sphinx_path):
+            raise FileNotFoundError(f'Could not found "sphinx-build" in calculated path: {self.sphinx_path}')
 
     def config_is_valid(self) -> bool:
         if not os.path.exists(self.source_perf_conf_path):
