@@ -65,7 +65,7 @@ Changelog
 ~~~~~
 :Released: 21.02.2022
 
-* Improvement: Reading wand writing times get measured (ALPHA status).
+* Improvement: Reading and writing times get measured (ALPHA status, poor parallel build support).
 * Improvement: CSV export is possible by setting ``--csv results.csv``.
 * Improvement: Builder can be set, also multiple times: ``--builder json``.
 
