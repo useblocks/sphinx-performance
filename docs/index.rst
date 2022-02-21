@@ -63,7 +63,7 @@ Changelog
 ---------
 0.1.6
 ~~~~~
-:Released: under development
+:Released: 21.02.2022
 
 * Improvement: Reading wand writing times get measured (ALPHA status).
 * Improvement: CSV export is possible by setting ``--csv results.csv``.
