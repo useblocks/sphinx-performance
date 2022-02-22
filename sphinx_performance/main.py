@@ -103,9 +103,10 @@ def cli(
     results = []
 
     counter = 1
+    runs = len(build_configs) * len(project_configs)
     for build_config in build_configs:
         for project_config in project_configs:
-            console.rule(f"[bold red]Run {counter}")
+            console.rule(f"[bold red]Run {counter}/{runs}")
             project = ProjectEnv(project_path, build_config, project_config, temp)
             if not project.config_is_valid():
                 console.print('Errors in configuration. Skipping this run.')

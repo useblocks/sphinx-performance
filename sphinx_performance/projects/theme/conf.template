@@ -106,10 +106,10 @@ html_theme = "alabaster"
 # documentation.
 #
 html_theme_options = {
-    {% if sidebar == 'false' %}
+    {% if sidebar|int <= 0 %}
     "nosidebar": True,
-    {% else %}
-    "nosidebar": False,
+    {% elif theme == 'rtd' %}
+    "navigation_depth": {{sidebar}},
     {% endif %}
 }
 

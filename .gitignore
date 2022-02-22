@@ -1,3 +1,6 @@
+*.csv
+*.csv#
+
 .idea
 .venv*
 .pvenv

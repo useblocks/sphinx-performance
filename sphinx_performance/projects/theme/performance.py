@@ -5,7 +5,7 @@ parameters = {
     "folders": 0,
     "depth": 1,
     "theme": "alabaster",
-    "sidebar": "true"
+    "sidebar": 5
 }
 
 info = {
