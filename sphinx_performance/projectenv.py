@@ -52,8 +52,6 @@ class ProjectEnv:
                 self.pip_path = os.path.join(self.bin_path, 'pip.exe')
                 self.sphinx_path = os.path.join(self.bin_path, 'sphinx-build.exe')
 
-
-
         self.extra_info = {}
 
         # Some path checks
