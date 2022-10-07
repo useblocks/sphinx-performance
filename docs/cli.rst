@@ -15,6 +15,10 @@ This can be an integrated project or a path to a self defined project::
     sphinx-performance --project needs
     sphinx-performance --project my/sphinx/project
 
+Can be used multiple times, so that for each project a specific test run gets executed::
+
+    sphinx-performance --project basic --project needs
+
 Default: ``basic``
 
 \-\-parallel

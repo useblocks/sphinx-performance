@@ -65,6 +65,7 @@ Changelog
 ~~~~~
 :Released: under development
 
+* Improvement: ``--project`` can be used multiple times.
 * Bugfix: Python bin/script calculation on windows fixed.
 
 0.1.6

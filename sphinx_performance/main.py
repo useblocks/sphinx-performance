@@ -28,7 +28,7 @@ PROJECTS = {
     ignore_unknown_options=True,
     allow_extra_args=True,
 ))
-@click.option("--project", default="basic", type=str, help="Defines the project to build")
+@click.option("--project", 'projects', default=["basic"], type=str, multiple=True, help="Defines the project to build")
 @click.option("--profile", default=[], type=str, multiple=True, help="Activates profiling for given area")
 @click.option(
     "--parallel",
@@ -37,7 +37,7 @@ PROJECTS = {
     multiple=True,
     help="Number of parallel processes to use. Same as -j for sphinx-build",
 )
-@click.option("--builder", default=['html'], multiple=True, help="Keeps the temporary src and build folders")
+@click.option("--builder", default=['html'], multiple=True, help="Define the builder to use")
 @click.option("--keep", is_flag=True, help="Keeps the temporary src and build folders")
 @click.option("--browser", is_flag=True, help="Opens the project in your browser")
 @click.option("--snakeviz", is_flag=True, help="Opens snakeviz view for measured profiles in browser")
@@ -47,7 +47,7 @@ PROJECTS = {
 @click.pass_context
 def cli(
     ctx,
-    project,
+    projects,
     profile,
     parallel,
     builder,
@@ -62,13 +62,15 @@ def cli(
     CLI handling
     """
 
-    if project not in PROJECTS:
-        if not os.path.exists(project):
-            console.print(f'Project {project} not found')
-            sys.exit(1)
-        project_path = os.path.abspath(project)
-    else:
-        project_path = PROJECTS[project]
+    project_path = {}
+    for project in projects:
+        if project not in PROJECTS:
+            if not os.path.exists(project):
+                console.print(f'Project {project} not found')
+                sys.exit(1)
+            project_path[project] = os.path.abspath(project)
+        else:
+            project_path[project] = PROJECTS[project]
 
     project_kwargs = {}
     for i in range(0, len(ctx.args), 2):
@@ -99,64 +101,79 @@ def cli(
     profile_str = ",".join(profile)
     os.environ["NEEDS_PROFILING"] = profile_str
 
-    console.print(f"\nRunning {len(project_configs) * len(build_configs)} test configurations.\n")
+    runs = len(projects) * len(build_configs) * len(project_configs)
+
+    console.print(f"\nRunning {runs} test configurations.\n")
     results = []
 
     counter = 1
-    runs = len(build_configs) * len(project_configs)
-    for build_config in build_configs:
-        for project_config in project_configs:
-            console.rule(f"[bold red]Run {counter}/{runs}")
-            project = ProjectEnv(project_path, build_config, project_config, temp)
-            if not project.config_is_valid():
-                console.print('Errors in configuration. Skipping this run.')
-                continue
-            project.prepare_project()
-            project.install_dependencies()
+    for project in projects:
+        for build_config in build_configs:
+            for project_config in project_configs:
+                console.rule(f"[bold red]Run {counter}/{runs}")
+                project_obj = ProjectEnv(project, project_path[project], build_config, project_config, temp)
+                if not project_obj.config_is_valid():
+                    console.print('Errors in configuration. Skipping this run.')
+                    continue
+                project_obj.prepare_project()
+                project_obj.install_dependencies()
 
-            result, extra_results = project.build()
+                result, extra_results = project_obj.build()
 
-            project.post_processing()
+                project_obj.post_processing()
 
-            config = {**project.project_config}
-            config['parallel'] = project.build_config['parallel']
-            config['builder'] = project.build_config['builder']
-            # config += {** project.extra_info}
-            results.append({
-                "result": result,
-                "config": config,
-                "info": project.extra_info,
-                "extra": extra_results})
-            counter += 1
+                config = {**project_obj.project_config}
+                config['parallel'] = project_obj.build_config['parallel']
+                config['builder'] = project_obj.build_config['builder']
+                # config += {** project_obj.extra_info}
+                results.append({
+                    "project": project,
+                    "result": result,
+                    "config": config,
+                    "info": project_obj.extra_info,
+                    "extra": extra_results})
+                counter += 1
 
     console.rule("[bold red]RESULTS")
 
+    # Calculate overall config keys, as each project may report different configs.
+    # So the final tables need to fill out not used config-keys from different results.
+    all_keys = {
+        'config': [],
+        'info': [],
+        'extra': [],
+    }
+    for key in all_keys.keys():
+        found_keys = []
+        for result in results:
+            found_keys += result[key]
+        all_keys[key] = set(found_keys)
+
     # Result matrix
     matrix = []
-    headers = ['#', 'runtime']
+    headers = ['#', 'runtime', 'project']
     headers.append("")
-    for key in results[0]['config'].keys():
-        headers.append(key)
 
-    headers.append("")
-    for key in results[0]['info'].keys():
-        headers.append(key)
-
-    headers.append("")
-    for key in results[0]['extra'].keys():
-        headers.append(key)
+    for keys in all_keys.values():
+        headers += keys
+        headers.append("")
 
     matrix.append(headers)
 
     run = 1
+
     for result in results:
         values = [f'Run {str(run)}', f"{result['result']:.2f}"]
+        values += [result['project']]
         values += [""]
-        values += [str(x) for x in result['config'].values()]
-        values += [""]
-        values += [str(x) for x in result['info'].values()]
-        values += [""]
-        values += [str(x) for x in result['extra'].values()]
+
+        for all_type, keys in all_keys.items():
+            key_values = []
+            for key in keys:
+                key_values.append(str(result[all_type].get(key, '-')))# If no value set for config, set to "-"
+            values += key_values
+            values += [""]
+
         matrix.append([*values])
         run += 1
 

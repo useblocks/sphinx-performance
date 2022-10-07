@@ -22,10 +22,11 @@ class ProjectEnv:
     """
     Handles all configurations for the test projects, creates them and finally calls the build.
     """
-    def __init__(self, project_path: str, build_config: str, project_config: str, temp: str = None):
+    def __init__(self, project, project_path: str, build_config: str, project_config: str, temp: str = None):
         if temp is not None and not os.path.exists(temp):
             raise ProjectException(f'Given temp folder does not exist: {temp}')
 
+        self.project = project
         self.project_path = project_path
         self.build_config = build_config
         self.project_config = project_config
@@ -183,6 +184,7 @@ class ProjectEnv:
                                                     **self.internal_data)
 
         conf_str = ', '.join([f'{key}: {value}' for key, value in self.project_config.items()])
+        console.print(f"[bold]Project[/bold]:\t {self.project}")
         console.print(f"[bold]Core/s[/bold]:\t\t {self.build_config['parallel']}")
         console.print(f"[bold]Builder[/bold]:\t {self.build_config['builder']}")
         console.print(f"[bold]Config[/bold]:\t\t {conf_str}")
