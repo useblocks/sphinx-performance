@@ -32,9 +32,28 @@ It was created to answer questions like:
 * Is there any different between two specific versions?
 * How huge is the benefit of using parallel build mode?
 * What are the performance bottlenecks during a Sphinx build?
+* What functions have an impact on the runtime?
+* Are there any memory problems?
+
+To answer these questions, **two commandline tools** are provided:
+
+sphinx-performance
+------------------
+Used to create automatically different projects and compare their build time and other key numbers.
 
 .. image:: /_static/sphinx_performance_showcase.gif
    :align: center
+
+See :ref:`sphinx-performance` for details.
+
+sphinx-analysis
+---------------
+Provides profilers and different viewers for runtime and memory consumption.
+
+.. image:: /_static/sphinx_analysis_live.gif
+   :width: 99%
+
+See :ref:`sphinx-analysis` for details.
 
 .. note::
 
@@ -42,7 +61,6 @@ It was created to answer questions like:
    into the currently used Python environment.
 
    It is a good idea to use virtual environments for **sphinx-performance** runs.
-
 
 .. toctree::
    :maxdepth: 3
@@ -61,10 +79,15 @@ of `Sphinx-Needs <https://sphinx-needs.com>`_.
 
 Changelog
 ---------
-0.1.7
+0.1.8
 ~~~~~
 :Released: under development
 
+0.1.7
+~~~~~
+:Released: 27.10.2022
+
+* Improvement: Introducing :ref:`sphinx-analysis` for runtime and memory profiling.
 * Improvement: ``--project`` can be used multiple times.
 * Bugfix: Python bin/script calculation on windows fixed.
 

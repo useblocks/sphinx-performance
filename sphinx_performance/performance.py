@@ -14,6 +14,7 @@ import rich.table
 from rich.style import Style
 from rich import box
 
+from sphinx_performance.call import Call
 from sphinx_performance.projectenv import ProjectEnv
 from sphinx_performance.utils import console
 
@@ -45,7 +46,7 @@ PROJECTS = {
 @click.option("--temp", default=None, type=str, help="Base folder path to use for temp folders. Must exist.")
 @click.option("--csv", 'csv_file', default=None, type=str, help="CSV file path, which shall store the results.")
 @click.pass_context
-def cli(
+def cli_performance(
     ctx,
     projects,
     profile,
@@ -59,66 +60,36 @@ def cli(
     csv_file=None
 ):
     """
-    CLI handling
+    CLI performance handling
     """
-
-    project_path = {}
-    for project in projects:
-        if project not in PROJECTS:
-            if not os.path.exists(project):
-                console.print(f'Project {project} not found')
-                sys.exit(1)
-            project_path[project] = os.path.abspath(project)
-        else:
-            project_path[project] = PROJECTS[project]
-
-    project_kwargs = {}
-    for i in range(0, len(ctx.args), 2):
-        name = ctx.args[i][2:]
-        if name not in project_kwargs:
-            project_kwargs[name] = []
-        value = ctx.args[i + 1]
-        try:
-            value = int(value)
-        except ValueError:
-            pass
-        project_kwargs[name].append(value)
-
-    if project_kwargs:
-        # Create project config test matrix
-        keys, values = zip(*project_kwargs.items())
-        project_configs = [dict(zip(keys, v)) for v in itertools.product(*values)]
-    else:
-        project_configs = [{}]
 
     build_kwargs = {"builder": builder, "parallel": list(parallel), "keep": [keep], "browser": [browser],
                     "snakeviz": [snakeviz], "debug": [debug]}
 
-    # Create build test matrix
-    keys, values = zip(*build_kwargs.items())
-    build_configs = [dict(zip(keys, v)) for v in itertools.product(*values)]
+    call = Call(projects, ctx.args, build_kwargs)
 
     profile_str = ",".join(profile)
     os.environ["NEEDS_PROFILING"] = profile_str
 
-    runs = len(projects) * len(build_configs) * len(project_configs)
+    console.print(f"\nRunning {call.runs} test configurations.\n")
+    results = []
 
-    console.print(f"\nRunning {runs} test configurations.\n")
+    console.print(f"\nRunning {call.runs} test configurations.\n")
     results = []
 
     counter = 1
     for project in projects:
-        for build_config in build_configs:
-            for project_config in project_configs:
-                console.rule(f"[bold red]Run {counter}/{runs}")
-                project_obj = ProjectEnv(project, project_path[project], build_config, project_config, temp)
+        for build_config in call.build_configs:
+            for project_config in call.project_configs:
+                console.rule(f"[bold red]Run {counter}/{call.runs}")
+                project_obj = ProjectEnv(project, call.project_path[project], build_config, project_config, temp)
                 if not project_obj.config_is_valid():
                     console.print('Errors in configuration. Skipping this run.')
                     continue
                 project_obj.prepare_project()
                 project_obj.install_dependencies()
 
-                result, extra_results = project_obj.build()
+                result, extra_results = project_obj.build_external()
 
                 project_obj.post_processing()
 
@@ -229,4 +200,4 @@ def cli(
 
 
 if "main" in __name__:
-    cli()
+    cli_performance()

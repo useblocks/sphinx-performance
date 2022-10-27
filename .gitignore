@@ -32,3 +32,6 @@ need_bar_*.png
 need_pie_*.png
 
 results.csv
+
+*.html
+*.prof

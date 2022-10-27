@@ -1,4 +1,6 @@
+import cProfile
 import importlib
+import memray
 import os.path
 import shutil
 import subprocess
@@ -10,8 +12,10 @@ from contextlib import suppress
 from pathlib import Path
 
 from jinja2 import Template
+from sphinx.application import Sphinx
 
 from sphinx_performance.utils import console
+from sphinx_performance.config import MEMORY_PROFILE, MEMRAY_PORT
 
 NEED_CONFIG_DEFAULT = ['pages', 'folders', 'depth']
 
@@ -269,9 +273,10 @@ class ProjectEnv:
         result_time = end_time - start_time
         console.print(f"[bold]Deps setup[/bold]:\t {result_time:.2f} s")
 
-    def build(self):
+    def build_external(self):
         """
-        Build copied Sphnx project
+        Build copied Sphinx project via subprocess.
+        Mostly used by sphinx-performance cli command.
         """
         if self.build_config['browser']:
             self.build_config['keep'] = True
@@ -392,6 +397,45 @@ class ProjectEnv:
         }
 
         return result_time, extra_results
+
+    def build_internal(self, use_memray=False, use_memray_live=False,
+                       use_runtime=False):
+        """
+        Build sphinx project via the Sphinx API call.
+
+        :return: (App statuscode, build time)
+        """
+        runtime_profile = None
+
+        if self.build_config['browser']:
+            self.build_config['keep'] = True
+
+        start_time = time.time()
+        app = Sphinx(srcdir=self.target_path,
+                     confdir=self.target_path,
+                     outdir=self.target_build_path,
+                     doctreedir=self.target_build_path,
+                     buildername=str(self.build_config['builder']),
+                     parallel=int(self.build_config['parallel']))
+        if use_runtime:
+            with cProfile.Profile() as runtime_profile:
+                app.build()
+
+        if use_memray:
+            memray_file = memray.FileDestination(path=MEMORY_PROFILE, overwrite=True)
+            with memray.Tracker(destination=memray_file):
+                app.build()
+
+        if use_memray_live:
+            console.print(f"Sphinx-Performance if waiting for a memray-listener.\n"
+                          f"[bold]Now it's time to execute '[red]memray live {MEMRAY_PORT}[/red]' in another terminal.")
+            memray_port = memray.SocketDestination(server_port=MEMRAY_PORT)
+            with memray.Tracker(destination=memray_port):
+                app.build()
+
+        end_time = time.time()
+        build_time = end_time - start_time
+        return app.statuscode, build_time, runtime_profile
 
     def post_processing(self):
         if self.build_config['browser']:
