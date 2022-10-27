@@ -30,14 +30,6 @@ python-versions = "*"
 test = ["flake8 (==3.7.8)", "hypothesis (==3.55.3)"]
 
 [[package]]
-name = "dataclasses"
-version = "0.8"
-description = "A backport of the dataclasses module for Python 3.6"
-category = "main"
-optional = false
-python-versions = ">=3.6, <3.7"
-
-[[package]]
 name = "importlib-metadata"
 version = "4.8.3"
 description = "Read metadata from Python packages"
@@ -50,9 +42,9 @@ typing-extensions = {version = ">=3.6.4", markers = "python_version < \"3.8\""}
 zipp = ">=0.5"
 
 [package.extras]
-docs = ["sphinx", "jaraco.packaging (>=8.2)", "rst.linker (>=1.9)"]
+docs = ["jaraco.packaging (>=8.2)", "rst.linker (>=1.9)", "sphinx"]
 perf = ["ipython"]
-testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "packaging", "pep517", "pyfakefs", "flufl.flake8", "pytest-perf (>=0.9.2)", "pytest-black (>=0.3.7)", "pytest-mypy", "importlib-resources (>=1.3)"]
+testing = ["flufl.flake8", "importlib-resources (>=1.3)", "packaging", "pep517", "pyfakefs", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.0.1)", "pytest-flake8", "pytest-mypy", "pytest-perf (>=0.9.2)"]
 
 [[package]]
 name = "jinja2"
@@ -77,6 +69,26 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "memray"
+version = "1.3.1"
+description = "A memory profiler for Python applications"
+category = "main"
+optional = false
+python-versions = ">=3.7.0"
+
+[package.dependencies]
+jinja2 = "*"
+rich = ">=11.2.0"
+typing-extensions = {version = "*", markers = "python_version < \"3.8.0\""}
+
+[package.extras]
+benchmark = ["asv"]
+dev = ["Cython", "asv", "black", "bump2version", "check-manifest", "flake8", "furo", "greenlet", "isort", "mypy", "pytest", "pytest-cov", "sphinx", "sphinx-argparse", "towncrier"]
+docs = ["bump2version", "furo", "sphinx", "sphinx-argparse", "towncrier"]
+lint = ["black", "check-manifest", "flake8", "isort", "mypy"]
+test = ["Cython", "greenlet", "pytest", "pytest-cov"]
+
+[[package]]
 name = "pygments"
 version = "2.11.2"
 description = "Pygments is a syntax highlighting package written in Python."
@@ -95,7 +107,6 @@ python-versions = ">=3.6.2,<4.0.0"
 [package.dependencies]
 colorama = ">=0.4.0,<0.5.0"
 commonmark = ">=0.9.0,<0.10.0"
-dataclasses = {version = ">=0.7,<0.9", markers = "python_version < \"3.7\""}
 pygments = ">=2.6.0,<3.0.0"
 typing-extensions = {version = ">=3.7.4,<5.0", markers = "python_version < \"3.8\""}
 
@@ -119,16 +130,16 @@ optional = false
 python-versions = ">=3.6"
 
 [package.extras]
-docs = ["sphinx", "jaraco.packaging (>=8.2)", "rst.linker (>=1.9)"]
-testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
+docs = ["jaraco.packaging (>=8.2)", "rst.linker (>=1.9)", "sphinx"]
+testing = ["func-timeout", "jaraco.itertools", "pytest (>=4.6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.0.1)", "pytest-flake8", "pytest-mypy"]
 
 [extras]
 docs = []
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.6.2"
-content-hash = "0b0c1f55f2da201f39ef502fe7211084a9c85fd457af6da5293ef9be53f8f0f5"
+python-versions = "^3.7.0"
+content-hash = "3b7e84bc0a1f6e49e254015263de32de6198c186fbc2671da8837ce5af339611"
 
 [metadata.files]
 click = [
@@ -142,10 +153,6 @@ colorama = [
 commonmark = [
     {file = "commonmark-0.9.1-py2.py3-none-any.whl", hash = "sha256:da2f38c92590f83de410ba1a3cbceafbc74fee9def35f9251ba9a971d6d66fd9"},
     {file = "commonmark-0.9.1.tar.gz", hash = "sha256:452f9dc859be7f06631ddcb328b6919c67984aca654e5fefb3914d54691aed60"},
-]
-dataclasses = [
-    {file = "dataclasses-0.8-py3-none-any.whl", hash = "sha256:0201d89fa866f68c8ebd9d08ee6ff50c0b255f8ec63a71c16fda7af82bb887bf"},
-    {file = "dataclasses-0.8.tar.gz", hash = "sha256:8479067f342acf957dc82ec415d355ab5edb7e7646b90dc6e2fd1d96ad084c97"},
 ]
 importlib-metadata = [
     {file = "importlib_metadata-4.8.3-py3-none-any.whl", hash = "sha256:65a9576a5b2d58ca44d133c42a241905cc45e34d2c06fd5ba2bafa221e5d7b5e"},
@@ -225,6 +232,27 @@ markupsafe = [
     {file = "MarkupSafe-2.0.1-cp39-cp39-win32.whl", hash = "sha256:10f82115e21dc0dfec9ab5c0223652f7197feb168c940f3ef61563fc2d6beb74"},
     {file = "MarkupSafe-2.0.1-cp39-cp39-win_amd64.whl", hash = "sha256:693ce3f9e70a6cf7d2fb9e6c9d8b204b6b39897a2c4a1aa65728d5ac97dcc1d8"},
     {file = "MarkupSafe-2.0.1.tar.gz", hash = "sha256:594c67807fb16238b30c44bdf74f36c02cdf22d1c8cda91ef8a0ed8dabf5620a"},
+]
+memray = [
+    {file = "memray-1.3.1-cp310-cp310-macosx_10_14_x86_64.whl", hash = "sha256:26344fc9244bf45a0f55e93cc0662ef243b3aec00d8fb0059e11dbe43c4c314d"},
+    {file = "memray-1.3.1-cp310-cp310-macosx_12_0_arm64.whl", hash = "sha256:03444ba1a0b774e02f2aa875e3534e04e347a7ce9be0d33cc19ca743930f5d65"},
+    {file = "memray-1.3.1-cp310-cp310-manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:03618e5ec9cd0310a755b3f31c353eb9444df0cc8c9ab480c0358c46888836fe"},
+    {file = "memray-1.3.1-cp310-cp310-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:041a5639e9e87fad3b62abd1c623b281f3ebbf3ee860eb9099c5f5da84410fd0"},
+    {file = "memray-1.3.1-cp311-cp311-macosx_10_14_x86_64.whl", hash = "sha256:f9a524a6259a7047ad463d6b132d679ac504d98b32cb98cc09563479c0e89329"},
+    {file = "memray-1.3.1-cp311-cp311-macosx_12_0_arm64.whl", hash = "sha256:20b6c919aaba9b37861727b55d210f4a4ea61962193851e7ab7cd77c74cf76dc"},
+    {file = "memray-1.3.1-cp311-cp311-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:37ceb32d836863e373477484cdc99e2be2fa2333e43a9905786c49e8f44ead4a"},
+    {file = "memray-1.3.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4edf9bb01e7f9eb60f3e5fa5f96fc53d4e4c3d98e221795de2cc08264543d898"},
+    {file = "memray-1.3.1-cp37-cp37m-manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:d500f47391b873d759fe34eaccb3715b3acdcb45398b9cab3fa775be3e4c2206"},
+    {file = "memray-1.3.1-cp37-cp37m-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:d837b9ddd2480d7095dac7f1f377b947f27ad312160240d866b005d944b79197"},
+    {file = "memray-1.3.1-cp38-cp38-macosx_10_14_x86_64.whl", hash = "sha256:bff74e1012d07e55b67fa3471cd37fca3e03e39c220255d464f477b1ab5f8d9c"},
+    {file = "memray-1.3.1-cp38-cp38-macosx_12_0_arm64.whl", hash = "sha256:4568f063e4c8dc25bacd2f4c1e3057ee7f4b7d767367b776ed607a837450f502"},
+    {file = "memray-1.3.1-cp38-cp38-manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:e9db5cfa22563852b935902478779ad89d12f94f53753e97422df37470db167e"},
+    {file = "memray-1.3.1-cp38-cp38-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:d2b8b3fad48de8a818a8e34f046a412a213fce94728fe6b7a1415fafcb9e1358"},
+    {file = "memray-1.3.1-cp39-cp39-macosx_10_14_x86_64.whl", hash = "sha256:e55e5f4560690411467154f7b11125903f230c04b9bd07c8fba7b37c6a4968cc"},
+    {file = "memray-1.3.1-cp39-cp39-macosx_12_0_arm64.whl", hash = "sha256:8cc349f59f56355588c6fa71c19db5dd894111303c65f4b3f6ab50e27b6347f9"},
+    {file = "memray-1.3.1-cp39-cp39-manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:9ce37915f21495ff7d6d4b3f56852a9b9a48adf37494aa57ba5da02519601d2f"},
+    {file = "memray-1.3.1-cp39-cp39-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:47271aa3016c1d421741674ce6a40b7833fbdf3db925fc527e38a915e7f9c0ce"},
+    {file = "memray-1.3.1.tar.gz", hash = "sha256:23cdf6c6da0b6db47627e56bb9f618bd52ee635dca4ef3b791ffc9e473407da5"},
 ]
 pygments = [
     {file = "Pygments-2.11.2-py3-none-any.whl", hash = "sha256:44238f1b60a76d78fc8ca0528ee429702aae011c265fe6a8dd8b63049ae41c65"},

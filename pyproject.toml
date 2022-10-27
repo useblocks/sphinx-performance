@@ -7,17 +7,35 @@ license = "MIT"
 readme = "README.rst"
 repository = "https://github.com/useblocks/sphinx-performance"
 documentation = "https://sphinx-performance.readthedocs.io/en/latest/"
+classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Topic :: Documentation',
+        'Topic :: Utilities',
+        'Framework :: Sphinx',
+    ]
 
 [tool.poetry.dependencies]
-python = "^3.6.2"
+python = "^3.7.0"
 click = "^8.0.3"
 rich = "^11.2.0"
 Jinja2 = "^3.0.3"
+memray = "^1.3.1"
 
 [tool.poetry.dev-dependencies]
 
 [tool.poetry.scripts]
-sphinx-performance = 'sphinx_performance.main:cli'
+sphinx-performance = 'sphinx_performance.performance:cli_performance'
+sphinx-analysis = 'sphinx_performance.analysis:cli_analysis'
 
 [tool.poetry.extras]
 docs = ["sphinx"]
@@ -25,3 +43,4 @@ docs = ["sphinx"]
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
+
