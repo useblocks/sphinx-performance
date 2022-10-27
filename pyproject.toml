@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "sphinx-performance"
-version = "0.1.7"
-description = ""
+version = "0.1.8"
+description = "Automatically setting up, profiling and comparing huge Sphinx projects"
 authors = ["team useblocks"]
 license = "MIT"
 readme = "README.rst"
