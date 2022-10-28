@@ -10,6 +10,7 @@ import time
 import webbrowser
 from contextlib import suppress
 from pathlib import Path
+from pyinstrument import Profiler
 
 from jinja2 import Template
 from sphinx.application import Sphinx
@@ -399,7 +400,7 @@ class ProjectEnv:
         return result_time, extra_results
 
     def build_internal(self, use_memray=False, use_memray_live=False,
-                       use_runtime=False):
+                       use_runtime=False, use_pyinstrument=False):
         """
         Build sphinx project via the Sphinx API call.
 
@@ -432,6 +433,15 @@ class ProjectEnv:
             memray_port = memray.SocketDestination(server_port=MEMRAY_PORT)
             with memray.Tracker(destination=memray_port):
                 app.build()
+
+        if use_pyinstrument:
+            profilere = Profiler()
+            profiler.start()
+            app.build()
+            profiler.end()
+            # ToDo: Finalize PyInstrument Integration
+            # https://pyinstrument.readthedocs.io/en/latest/reference.html#pyinstrument.Profiler
+            # How to get report?
 
         end_time = time.time()
         build_time = end_time - start_time

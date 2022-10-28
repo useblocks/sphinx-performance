@@ -42,6 +42,7 @@ from sphinx_performance.config import RUNTIME_PROFILE, MEMORY_PROFILE, MEMORY_HT
 @click.option("--memray", is_flag=True, help="Activates memory profiling for the complete build.")
 @click.option("--memray-live", is_flag=True, help="Activates memory live profiling for the complete build.")
 @click.option("--summary", is_flag=True, help="Prints a summary, if 'memray' is used.")
+@click.option("--pyinstrument", is_flag=True, help="Uses pyinstrument for runtime measurment.")
 @click.pass_context
 def cli_analysis(
     ctx,
@@ -59,7 +60,8 @@ def cli_analysis(
     runtime=False,
     memray=False,
     memray_live=False,
-    summary=False
+    summary=False,
+    pyinstrument=False
 ):
     """
     CLI analysis handling
@@ -103,7 +105,8 @@ def cli_analysis(
 
                 app_code, build_time, all_profile = project_obj.build_internal(use_runtime=runtime,
                                                                                use_memray=memray,
-                                                                               use_memray_live=memray_live)
+                                                                               use_memray_live=memray_live,
+                                                                               use_pyinstrument=pyinstrument)
 
                 console.print(f'Build done in {build_time:.3f}s with status code {app_code}')
                 project_obj.post_processing()
