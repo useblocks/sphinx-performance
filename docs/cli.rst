@@ -180,6 +180,14 @@ is the used **memory profiler**, which also supports a live viewer.
 The options for setting up the project are the same as for :ref:`sphinx-performance`, except
 ``csv``, which is not supported, and ``snakeviz``, which was renamed to ``flamegraph``.
 
+Example calls::
+
+   sphinx-analysis --project --pages 10 --folders 3 --depth 2 --memray --flamegraph
+   sphinx-analysis --project --pages 10 --folders 3 --depth 2 --runtime --stats
+   sphinx-analysis --project needs --needs 40 --needtables 2 --pages 5 --folders 2 --depth 1 --pyinstrument --tree
+
+
+
 .. _option_runtime:
 
 \-\-runtime
@@ -205,6 +213,13 @@ A memray viewer can be opened in another terminal by executing ``memray live 131
 
 .. image:: /_static/sphinx_analysis_live.gif
    :width: 99%
+
+.. _option_pyinstrument:
+
+\-\-pyinstrument
+~~~~~~~~~~~~~~~~
+Uses the pyinstrument profiler and saves the profile in a file called ``pyinstrument_profile.json``.
+
 
 \-\-stats
 ~~~~~~~~~
@@ -258,3 +273,16 @@ Can be used to answer questions to the user automatically with ``yes``.
 
 This may happen, if e.g. multiple projects are configured to be used, and ``sphinx-analysis`` asks the user to confirm
 this.
+
+
+\-\- tree
+~~~~~~~~~
+Creates a ``pyinstrument_profile.html`` file, which shows a runtime tree, profiled by ``--pyinstrument``.
+
+Supported by: :ref:`option_pyinstrument`.
+
+
+.. figure:: /_static/pyinstrument_tree.png
+   :width: 49%
+
+   pyinstrument tree in HTML file
