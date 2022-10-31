@@ -82,7 +82,17 @@ class ProjectEnv:
             console.print(f'performance.py file could not be imported: {{e}}')
             return False
 
-        conf_params = per_conf.parameters
+        ref_params = per_conf.references
+        if 'ref' in self.project_config:
+            try:
+                conf_params = ref_params[self.project_config['ref']]
+            except KeyError:
+                console.print(f"Reference '{self.project_config['ref']}' is unknown. "
+                              f"Available for the project '{self.project}' are  "
+                              f"{', '.join(ref_params.keys())}")
+                return False
+        else:
+            conf_params = per_conf.parameters
         self.extra_info = per_conf.info
 
         # From here on several problems can occur, but we want to collect them all and print them all for the user.

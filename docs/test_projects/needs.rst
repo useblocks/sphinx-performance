@@ -27,6 +27,8 @@ Run
 Files
 -----
 
+.. _needs_performance:
+
 performance.py
 ~~~~~~~~~~~~~~
 

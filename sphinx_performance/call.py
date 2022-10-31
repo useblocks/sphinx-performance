@@ -57,7 +57,7 @@ class Call:
         project_configs = [{}]
         if project_kwargs:
             # Create project config test matrix
-            keys, values = zip(*self.project_kwargs.items())
+            keys, values = zip(*project_kwargs.items())
             project_configs = [dict(zip(keys, v)) for v in itertools.product(*values)]
         return project_configs
 
