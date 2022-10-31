@@ -12,6 +12,8 @@ from contextlib import suppress
 from pathlib import Path
 from pyinstrument import Profiler
 
+
+
 from jinja2 import Template
 from sphinx.application import Sphinx
 
@@ -406,7 +408,7 @@ class ProjectEnv:
 
         :return: (App statuscode, build time)
         """
-        runtime_profile = None
+        profile = None
 
         if self.build_config['browser']:
             self.build_config['keep'] = True
@@ -419,7 +421,7 @@ class ProjectEnv:
                      buildername=str(self.build_config['builder']),
                      parallel=int(self.build_config['parallel']))
         if use_runtime:
-            with cProfile.Profile() as runtime_profile:
+            with cProfile.Profile() as profile:
                 app.build()
 
         if use_memray:
@@ -435,17 +437,15 @@ class ProjectEnv:
                 app.build()
 
         if use_pyinstrument:
-            profilere = Profiler()
-            profiler.start()
+            profiler = Profiler()
+            import inspect
+            profiler.start(caller_frame=inspect.currentframe().f_back)
             app.build()
-            profiler.end()
-            # ToDo: Finalize PyInstrument Integration
-            # https://pyinstrument.readthedocs.io/en/latest/reference.html#pyinstrument.Profiler
-            # How to get report?
+            profile = profiler.stop()  # Returns a pyinstrument session
 
         end_time = time.time()
         build_time = end_time - start_time
-        return app.statuscode, build_time, runtime_profile
+        return app.statuscode, build_time, profile
 
     def post_processing(self):
         if self.build_config['browser']:

@@ -83,6 +83,8 @@ Changelog
 ~~~~~
 :Released: under development
 
+* Improvement: Adds :ref:`option_pyinstrument` as an additional profiler to :ref:`sphinx-analysis`.
+
 0.1.7
 ~~~~~
 :Released: 27.10.2022

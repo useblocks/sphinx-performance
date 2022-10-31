@@ -16,6 +16,8 @@ from sphinx_performance.utils import console
 
 from sphinx_performance.config import RUNTIME_PROFILE, MEMORY_PROFILE, MEMORY_HTML
 
+from pyinstrument.renderers import HTMLRenderer
+
 
 @click.command(context_settings=dict(
     ignore_unknown_options=True,
@@ -43,6 +45,7 @@ from sphinx_performance.config import RUNTIME_PROFILE, MEMORY_PROFILE, MEMORY_HT
 @click.option("--memray-live", is_flag=True, help="Activates memory live profiling for the complete build.")
 @click.option("--summary", is_flag=True, help="Prints a summary, if 'memray' is used.")
 @click.option("--pyinstrument", is_flag=True, help="Uses pyinstrument for runtime measurment.")
+@click.option("--tree", is_flag=True, help="Opens an html tree view if 'pyinstrument' is used")
 @click.pass_context
 def cli_analysis(
     ctx,
@@ -61,7 +64,8 @@ def cli_analysis(
     memray=False,
     memray_live=False,
     summary=False,
-    pyinstrument=False
+    pyinstrument=False,
+    tree=False
 ):
     """
     CLI analysis handling
@@ -123,6 +127,15 @@ def cli_analysis(
                     if summary:
                         args = ['memray', 'summary', MEMORY_PROFILE]
                         subprocess.run(args)
+
+                if pyinstrument:
+                    all_profile.save('pyinstrument_profile.json')
+
+    if pyinstrument and tree:
+        html_data = HTMLRenderer(show_all=True).render(all_profile)
+        with open('pyinstrument_profile.html', 'w') as profile_html:
+            profile_html.write(html_data)
+            webbrowser.open_new_tab('pyinstrument_profile.html')
 
     if flamegraph:
         if runtime:
