@@ -18,7 +18,7 @@ To get a first help, type ``sphinx-performance --help``
 
 Use **sphinx-command** to compare different Sphinx project setups.
 
-For deeper analysis, use :ref:`sphinx_analysis`.
+For deeper analysis, use :ref:`sphinx-analysis`.
 
 \-\-project
 ~~~~~~~~~~~
@@ -99,6 +99,30 @@ This means the amount of folders and files raises exponential::
     sphinx-performance --pages 10 --folders 10 --depth 0  # 10 pages, 0 folders
     sphinx-performance --pages 10 --folders 10 --depth 1  # 110 pages, 10 folders
     sphinx-performance --pages 10 --folders 10 --depth 2  # 1110 pages, 100 folders
+
+
+\-\-ref
+*******
+Allows to select a preconfigured testproject setup by its reference name.
+
+Each test project can provide its own set of configurations.
+
+There is no common naming rule, how such references shall be named in Sphinx-Performance.
+For details take a look at the variable ``references`` of ``performance.py`` file of each test
+project. For embedded projects:
+
+* :ref:`Basic config file <basic_performance>`
+* :ref:`Needs config file <needs_performance>`
+* :ref:`Theme config file <theme_performance>`
+
+Example::
+
+   sphinx-performance --project theme --ref alabaster --ref rtd --ref pydata --ref furo --browser --depth 2
+
+Config parameters set by a reference configuration can be easily overwritten by just using the parameter in the
+command line call::
+
+   sphinx-performance --ref small --folders 50
 
 
 Parameter matrix
@@ -185,8 +209,7 @@ Example calls::
    sphinx-analysis --project --pages 10 --folders 3 --depth 2 --memray --flamegraph
    sphinx-analysis --project --pages 10 --folders 3 --depth 2 --runtime --stats
    sphinx-analysis --project needs --needs 40 --needtables 2 --pages 5 --folders 2 --depth 1 --pyinstrument --tree
-
-
+   sphinx-analysis --ref medium --runtime --summary
 
 .. _option_runtime:
 

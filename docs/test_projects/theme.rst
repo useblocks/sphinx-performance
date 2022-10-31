@@ -34,6 +34,8 @@ Run
 Files
 -----
 
+.. _theme_performance:
+
 performance.py
 ~~~~~~~~~~~~~~
 

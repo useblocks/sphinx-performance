@@ -24,6 +24,8 @@ Run
 Files
 -----
 
+.. _basic_performance:
+
 performance.py
 ~~~~~~~~~~~~~~
 
