@@ -69,6 +69,7 @@ See :ref:`sphinx-analysis` for details.
    installation
    cli
    test_projects/index
+   examples
 
 Kudos
 -----

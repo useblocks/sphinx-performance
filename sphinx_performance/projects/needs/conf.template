@@ -34,7 +34,7 @@ sys.path.insert(0, os.path.abspath("../../sphinxcontrib"))
 # ones.
 
 
-extensions = ["sphinxcontrib.needs"]
+extensions = ["sphinx_needs", "sphinxcontrib.plantuml"]
 
 needs_profiling = ["needtable"]
 
@@ -169,3 +169,20 @@ texinfo_documents = [
         "Miscellaneous",
     ),
 ]
+
+
+## PLANTUML
+
+local_plantuml_path = os.path.join(os.path.dirname(__file__), "utils", "plantuml.jar")
+
+
+plantuml = f"java -jar {local_plantuml_path}"
+
+# plantuml_output_format = 'png'
+plantuml_output_format = "svg_img"
+
+
+def setup(app):
+    # Dirty way to force Sphinx to use or not use parallel build steps
+    app.extensions['sphinx_needs'].parallel_read_safe = {{parallel_read}}
+    app.extensions['sphinx_needs'].parallel_write_safe = {{parallel_write}}

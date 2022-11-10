@@ -24,23 +24,59 @@ Amount of needs: **{{needs}}**
 {% for n in range(needs) %}
 .. req:: Test Need Page {{ page }} {{n}}
    :id: R_{{global_page}}_{{n}}
-{% if not basic %}   :number: {{n}}{% endif %}
+   :number: {{n}}
    :links: R_{{global_page}}_{{needs-n-1}}
+{% endfor %}
+
+Needrefs
+~~~~~~~~
+{% for n in range(needrefs) %}
+:need:`R_{{global_page}}_{{needs-n-1}}`
 {% endfor %}
 
 Needtable
 ~~~~~~~~~
 Amount of needtables: **{{needtables}}**
 
-{%  if basic %}
-.. needtable::
-   :show_filters:
-   :columns: id, title, number, links
-{% else %}
 {% for n in range(needtables) %}
 .. needtable::
    :show_filters:
    :filter: int(number)**3 > 0 or len(links) > 0
    :columns: id, title, number, links
 {% endfor %}
-{% endif %}
+
+Neeedflow
+~~~~~~~~~
+Amount of needflows: **{{needflows}}**
+
+{% for n in range(needflows) %}
+.. needflow::
+   :filter: int(number)**3 > 0 or len(links) > 0
+{% endfor %}
+
+Neeedpie
+~~~~~~~~
+Amount of needpies: **{{needpies}}**
+
+{% for n in range(needpies) %}
+.. needpie::
+
+   int(number) == 4
+   int(number) == 2
+   int(number) >= 100
+   int(number) >= 600
+{% endfor %}
+
+UMLs
+~~~~
+Amount of plantuml diagrams (No use of Sphinx-Needs)
+{% for n in range(umls) %}
+.. uml::
+
+   card "A" as a
+   card "B" as b
+
+   a --> b
+   b ==> a
+
+{% endfor %}

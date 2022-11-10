@@ -1,3 +1,4 @@
 sphinx=={{sphinx}}
-sphinxcontrib-needs
-sphinxcontrib-plantuml
+sphinx-needs
+sphinxcontrib-plantuml>=0.24
+{{local}}

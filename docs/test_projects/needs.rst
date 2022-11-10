@@ -6,11 +6,16 @@ amounts of needs and needtables.
 Parameters
 ----------
 :needs: Number of maximum needs
-:needtables: Number of maximum needtables
+:needtables: Number of needtables
+:needflows: Number of needflows
+:needpies: Number of needpies
+:needrefs: Number of needrefs
+:umls: Number of standard PlantUML diagrams
 :dummies: Number of standard rst dummies
 :pages: Number of additional pages with needs
 :parallel: Number of parallel processes to use. Same as -j for sphinx-build
 :sphinx: Sphinx version to use
+:local: An absolute path to a local python package which shall get installed.
 
 For the default values of the above parameters, please take a look into the ``performance.py`` file.
 

@@ -433,25 +433,24 @@ class ProjectEnv:
         if use_runtime:
             with cProfile.Profile() as profile:
                 app.build()
-
-        if use_memray:
+        elif use_memray:
             memray_file = memray.FileDestination(path=MEMORY_PROFILE, overwrite=True)
             with memray.Tracker(destination=memray_file):
                 app.build()
-
-        if use_memray_live:
+        elif use_memray_live:
             console.print(f"Sphinx-Performance if waiting for a memray-listener.\n"
                           f"[bold]Now it's time to execute '[red]memray live {MEMRAY_PORT}[/red]' in another terminal.")
             memray_port = memray.SocketDestination(server_port=MEMRAY_PORT)
             with memray.Tracker(destination=memray_port):
                 app.build()
-
-        if use_pyinstrument:
+        elif use_pyinstrument:
             profiler = Profiler()
             import inspect
             profiler.start(caller_frame=inspect.currentframe().f_back)
             app.build()
             profile = profiler.stop()  # Returns a pyinstrument session
+        else:
+            app.build()
 
         end_time = time.time()
         build_time = end_time - start_time
