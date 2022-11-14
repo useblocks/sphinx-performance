@@ -73,7 +73,7 @@ See :ref:`sphinx-analysis` for details.
 Kudos
 -----
 This little tool borrows a lot of ideas from the
-`performance script <https://sphinx-performance.readthedocs.io/en/latest/performance/index.html>`_
+`performance script <https://sphinxcontrib-needs.readthedocs.io/en/latest/performance/index.html>`_
 of `Sphinx-Needs <https://sphinx-needs.com>`_.
 
 
