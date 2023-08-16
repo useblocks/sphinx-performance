@@ -46,6 +46,7 @@ from pyinstrument.renderers import HTMLRenderer
 @click.option("--summary", is_flag=True, help="Prints a summary, if 'memray' is used.")
 @click.option("--pyinstrument", is_flag=True, help="Uses pyinstrument for runtime measurment.")
 @click.option("--tree", is_flag=True, help="Opens an html tree view if 'pyinstrument' is used")
+@click.option("--tree-filter", default=None, type=float, help="For tree view, remove nodes that represent less than X seconds of the total time.")
 @click.pass_context
 def cli_analysis(
     ctx,
@@ -65,7 +66,8 @@ def cli_analysis(
     memray_live=False,
     summary=False,
     pyinstrument=False,
-    tree=False
+    tree=False,
+    tree_filter=None,
 ):
     """
     CLI analysis handling
@@ -132,7 +134,13 @@ def cli_analysis(
                     all_profile.save('pyinstrument_profile.json')
 
     if pyinstrument and tree:
-        html_data = HTMLRenderer(show_all=True).render(all_profile)
+        if tree_filter:
+            show_all = False
+            processor_options = {"filter_threshold": tree_filter}
+        else:
+            show_all = True
+            processor_options = {}
+        html_data = HTMLRenderer(show_all=show_all, processor_options=processor_options).render(all_profile)
         with open('pyinstrument_profile.html', 'w') as profile_html:
             profile_html.write(html_data)
             webbrowser.open_new_tab('pyinstrument_profile.html')
