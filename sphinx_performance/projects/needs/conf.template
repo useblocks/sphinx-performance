@@ -21,7 +21,7 @@ import sys
 
 from docutils.parsers.rst import directives
 
-sys.path.insert(0, os.path.abspath("../../sphinxcontrib"))
+
 
 # -- General configuration ------------------------------------------------
 
@@ -34,7 +34,7 @@ sys.path.insert(0, os.path.abspath("../../sphinxcontrib"))
 # ones.
 
 
-extensions = ["sphinxcontrib.needs"]
+extensions = ["sphinx_needs"]
 
 needs_profiling = ["needtable"]
 
