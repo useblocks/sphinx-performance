@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Python: Module",
+      "name": "analysis needs pyinstr p4",
       "type": "python",
       "request": "launch",
       "module": "sphinx_performance.analysis",
