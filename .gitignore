@@ -24,9 +24,9 @@ docs/github_images/
 docs/_images/need_pie_*.png
 
 .devcontainer/
-.vscode/
+.vscode/*
+!.vscode/*.template.json
 .dockerignore
-
 
 need_bar_*.png
 need_pie_*.png
@@ -35,4 +35,5 @@ results.csv
 
 *.html
 *.prof
-*.json
+/*.json
+/*.html
