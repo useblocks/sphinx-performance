@@ -1,0 +1,17 @@
+{
+  "black-formatter.args": ["--config", "${workspaceFolder}/pyproject.toml"],
+  "black-formatter.path": ["${workspaceFolder}/.venv/bin/black"],
+  "editor.formatOnSave": true,
+  "editor.rulers": [88],
+  "python.formatting.provider": "none",
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true
+  }
+}

@@ -1,0 +1,35 @@
+name: format, lint, docs
+on: [pull_request]
+
+jobs:
+  format_lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install Python dependencies
+        run: |
+          python -m pip install poetry
+          poetry install
+      - name: Check black formatting
+        run: poetry run black --check --diff --config pyproject.toml sphinx_performance
+      - name: Check ruff linting
+        run: poetry run ruff check sphinx_performance
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install Python docs dependencies
+        run: |
+          python -m pip install poetry
+          poetry install --only docs
+      - name: Check docs build
+        working-directory: ./docs
+        run: poetry run sphinx-build -b html . _build/html -W

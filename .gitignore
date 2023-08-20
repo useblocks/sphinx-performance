@@ -26,6 +26,7 @@ docs/_images/need_pie_*.png
 .devcontainer/
 .vscode/*
 !.vscode/*.template.json
+!.vscode/extensions.json
 .dockerignore
 
 need_bar_*.png
