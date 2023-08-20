@@ -28,6 +28,7 @@ PROJECTS = {
 @click.command(context_settings=dict(
     ignore_unknown_options=True,
     allow_extra_args=True,
+    help_option_names=['-h', '--help'],
 ))
 @click.option("--project", 'projects', default=["basic"], type=str, multiple=True, help="Defines the project to build")
 @click.option("--profile", default=[], type=str, multiple=True, help="Activates profiling for given area")
