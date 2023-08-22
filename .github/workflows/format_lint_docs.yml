@@ -13,7 +13,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install poetry
-          poetry install --extras=dev
+          poetry install -E dev
       - name: Check black formatting
         run: poetry run black --check --diff --config pyproject.toml sphinx_performance
       - name: Check ruff linting
@@ -29,7 +29,7 @@ jobs:
       - name: Install Python docs dependencies
         run: |
           python -m pip install poetry
-          poetry install --extras=docs
+          poetry install -E docs
       - name: Check docs build
         working-directory: ./docs
         run: poetry run sphinx-build -b html . _build/html -W
