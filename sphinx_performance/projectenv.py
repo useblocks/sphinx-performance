@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import cProfile
 import importlib
 import os.path

@@ -85,8 +85,8 @@ line-length = 100
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
-# Assume Python 3.11.
-target-version = "py311"
+# lint against oldest supported Python version
+target-version = "py38"
 
 [tool.ruff.pydocstyle]
 convention = "pep257"
