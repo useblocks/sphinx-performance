@@ -29,7 +29,7 @@ pytz = {version = ">=2015.7", markers = "python_version < \"3.9\""}
 name = "black"
 version = "23.7.0"
 description = "The uncompromising code formatter."
-optional = false
+optional = true
 python-versions = ">=3.8"
 files = [
     {file = "black-23.7.0-cp310-cp310-macosx_10_16_arm64.whl", hash = "sha256:5c4bc552ab52f6c1c506ccae05681fab58c3f72d59ae6e6639e8885e94fe2587"},
@@ -391,7 +391,7 @@ test = ["Cython", "greenlet", "ipython", "pytest", "pytest-cov", "setuptools"]
 name = "mypy-extensions"
 version = "1.0.0"
 description = "Type system extensions for programs checked with the mypy type checker."
-optional = false
+optional = true
 python-versions = ">=3.5"
 files = [
     {file = "mypy_extensions-1.0.0-py3-none-any.whl", hash = "sha256:4392f6c0eb8a5668a69e23d168ffa70f0be9ccfd32b5cc2d26a34ae5b844552d"},
@@ -413,7 +413,7 @@ files = [
 name = "pathspec"
 version = "0.11.2"
 description = "Utility library for gitignore style pattern matching of file paths."
-optional = false
+optional = true
 python-versions = ">=3.7"
 files = [
     {file = "pathspec-0.11.2-py3-none-any.whl", hash = "sha256:1d6ed233af05e679efb96b1851550ea95bbb64b7c490b0f5aa52996c11e92a20"},
@@ -424,7 +424,7 @@ files = [
 name = "platformdirs"
 version = "3.10.0"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
-optional = false
+optional = true
 python-versions = ">=3.7"
 files = [
     {file = "platformdirs-3.10.0-py3-none-any.whl", hash = "sha256:d7c24979f292f916dc9cbf8648319032f551ea8c49a4c9bf2fb556a02070ec1d"},
@@ -566,7 +566,7 @@ jupyter = ["ipywidgets (>=7.5.1,<8.0.0)"]
 name = "ruff"
 version = "0.0.285"
 description = "An extremely fast Python linter, written in Rust."
-optional = false
+optional = true
 python-versions = ">=3.7"
 files = [
     {file = "ruff-0.0.285-py3-none-macosx_10_7_x86_64.whl", hash = "sha256:72a3a0936369b986b0e959f9090206ed3c18f9e5e439ea5b8e6867c6707aded5"},
@@ -711,7 +711,7 @@ test = ["flake8", "mypy", "pytest"]
 name = "sphinxcontrib-programoutput"
 version = "0.17"
 description = "Sphinx extension to include program output"
-optional = false
+optional = true
 python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*"
 files = [
     {file = "sphinxcontrib-programoutput-0.17.tar.gz", hash = "sha256:300ee9b8caee8355d25cc74b4d1c7efd12e608d2ad165e3141d31e6fbc152b7f"},
@@ -755,7 +755,7 @@ test = ["pytest"]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
-optional = false
+optional = true
 python-versions = ">=3.7"
 files = [
     {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
@@ -786,7 +786,7 @@ files = [
 name = "typing-extensions"
 version = "4.7.1"
 description = "Backported and Experimental Type Hints for Python 3.7+"
-optional = false
+optional = true
 python-versions = ">=3.7"
 files = [
     {file = "typing_extensions-4.7.1-py3-none-any.whl", hash = "sha256:440d5dd3af93b060174bf433bccd69b0babc3b15b1a8dca43789fd7f61514b36"},
@@ -825,7 +825,12 @@ files = [
 docs = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-lint"]
 testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-ignore-flaky", "pytest-mypy (>=0.9.1)", "pytest-ruff"]
 
+[extras]
+all = ["black", "ruff", "sphinxcontrib-programoutput"]
+dev = ["black", "ruff"]
+docs = ["sphinxcontrib-programoutput"]
+
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4"
-content-hash = "7c5ba549f7a8da5857e0a8c2affa8e0e3c208ac0f41919adbbd2ddc0b0ba3a79"
+content-hash = "6cb3b08a8d5a494dad55adf74567eb248f35a3e498e4db25bbfb71d0c48eb0e3"
