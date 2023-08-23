@@ -6,8 +6,11 @@ sphinx:
 python:
   version: 3.8
   install:
-    - requirements: docs/requirements.txt
     - method: pip
       path: .
       extra_requirements:
         - docs
+
+sphinx:
+  builder: html
+  fail_on_warning: true
