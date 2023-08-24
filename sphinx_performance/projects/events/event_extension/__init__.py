@@ -19,7 +19,8 @@ def wait_generic(event, ret_val=None):
     exec(
         f"""def {func_name}(*args, **kwargs):
         from time import sleep
-        sleep(.5)
+        sleep(.1)
+        # print("func '{func_name}' invoked for event '{event}'")
         return {ret_val}""",
     )
     return locals().get(func_name)
@@ -29,23 +30,30 @@ def setup(app: Sphinx) -> dict[str, Any]:
     """Entry point for Sphinx."""
     # Make connections to events
     events = [
-        ["builder-inited"],
-        ["config-inited"],
-        ["env-get-outdated", []], # *
-        ["env-purge-doc"], # *
-        ["env-before-read-docs"], # *
-        ["source-read"],  # *
+        ["builder-inited"],  # invoked
+        ["config-inited"],  # invoked
+        ["env-get-outdated", []],  # invoked
+        ["env-purge-doc"],  # invoked
+        ["env-before-read-docs"],  # invoked
+        ["source-read"],  # invoked
         ["object-description-transform"],
-        ["doctree-read"],  # *
-        ["missing-reference"], # *
-        ["warn-missing-reference"], # *
-        ["doctree-resolved"], # *
-        ["env-merge-info"],
-        ["env-updated"], # *
-        ["env-check-consistency"], # *
-        ["html-collect-pages", []], # *
-        ["html-page-context"], # *
+        ["doctree-read"],  # invoked
+        ["missing-reference"],  # invoked
+        ["warn-missing-reference"],  # invoked
+        ["doctree-resolved"],  # invoked
+        ["env-merge-info"],  # invoked
+        ["env-updated"],  # invoked
+        ["env-check-consistency"],  # invoked
+        ["html-collect-pages", []],  # invoked
+        ["html-page-context"],  # invoked
         ["linkcheck-process-uri"],
+        ["build-finished"],  # invoked
     ]
     for event in events:
         app.connect(event[0], wait_generic(*event))
+
+    return {
+        "version": "0.1.0",
+        "parallel_read_safe": True,
+        "parallel_write_safe": True,
+    }
