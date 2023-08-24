@@ -1,7 +1,7 @@
 parameters = {
     "sphinx": "5.1",
     "dummies": 1,
-    "pages": 1,
+    "pages": 9,
     "folders": 0,
     "depth": 1,
 }
