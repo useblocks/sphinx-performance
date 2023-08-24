@@ -501,22 +501,25 @@ class ProjectEnv:
             self.build_config["keep"] = True
 
         start_time = time.time()
-        app = Sphinx(
-            srcdir=self.target_path,
-            confdir=self.target_path,
-            outdir=self.target_build_path,
-            doctreedir=self.target_build_path,
-            buildername=str(self.build_config["builder"]),
-            parallel=int(self.build_config["parallel"]),
-        )
+        def instantiate_sphinx_and_start():
+            app = Sphinx(
+                srcdir=self.target_path,
+                confdir=self.target_path,
+                outdir=self.target_build_path,
+                doctreedir=self.target_build_path,
+                buildername=str(self.build_config["builder"]),
+                parallel=int(self.build_config["parallel"]),
+            )
+            return app.build()
         if use_runtime:
             with cProfile.Profile() as profile:
-                app.build()
+                instantiate_sphinx_and_start()
 
+        status_code = 0
         if use_memray:
             memray_file = memray.FileDestination(path=MEMORY_PROFILE, overwrite=True)
             with memray.Tracker(destination=memray_file):
-                app.build()
+                status_code =instantiate_sphinx_and_start()
 
         if use_memray_live:
             console.print(
@@ -526,19 +529,19 @@ class ProjectEnv:
             )
             memray_port = memray.SocketDestination(server_port=MEMRAY_PORT)
             with memray.Tracker(destination=memray_port):
-                app.build()
+                status_code = instantiate_sphinx_and_start()
 
         if use_pyinstrument:
             profiler = Profiler()
             import inspect
 
             profiler.start(caller_frame=inspect.currentframe().f_back)
-            app.build()
+            status_code = instantiate_sphinx_and_start()
             profile = profiler.stop()  # Returns a pyinstrument session
 
         end_time = time.time()
         build_time = end_time - start_time
-        return app.statuscode, build_time, profile
+        return status_code, build_time, profile
 
     def post_processing(self):
         if self.build_config["browser"]:
