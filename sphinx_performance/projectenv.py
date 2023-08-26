@@ -506,15 +506,18 @@ class ProjectEnv:
 
         def instantiate_sphinx_and_start():
             class MockEventManager(EventManager):
-                def emit_new(self, *args, **kwargs):
-                    return self.emit_orig(*args, **kwargs)
+                def emit(
+                    self,
+                    *args,
+                    **kwargs,
+                ) -> list:
+                    """Emit a Sphinx event."""
+                    return super().emit(*args, **kwargs)
 
                 def __init__(self, *args, **kwargs) -> None:
                     super().__init__(*args, **kwargs)
                     # Every instance of MockFoo will now have its `foo` method
                     # wrapped in a MagicMock
-                    self.emit_orig = self.emit
-                    self.emit = self.emit_new
 
             with patch("sphinx.application.EventManager", MockEventManager):
                 app = Sphinx(
