@@ -17,9 +17,9 @@ import memray
 from jinja2 import Template
 from pyinstrument import Profiler
 from sphinx.application import Sphinx
-from sphinx.events import EventManager
 
 from sphinx_performance.config import MEMORY_PROFILE, MEMRAY_PORT
+from sphinx_performance.sphinx_events import EventManager
 from sphinx_performance.utils import console
 
 NEED_CONFIG_DEFAULT = ["pages", "folders", "depth"]
@@ -504,22 +504,8 @@ class ProjectEnv:
 
         start_time = time.time()
 
-        def instantiate_sphinx_and_start():
-            class MockEventManager(EventManager):
-                def emit(
-                    self,
-                    *args,
-                    **kwargs,
-                ) -> list:
-                    """Emit a Sphinx event."""
-                    return super().emit(*args, **kwargs)
-
-                def __init__(self, *args, **kwargs) -> None:
-                    super().__init__(*args, **kwargs)
-                    # Every instance of MockFoo will now have its `foo` method
-                    # wrapped in a MagicMock
-
-            with patch("sphinx.application.EventManager", MockEventManager):
+        def init_sphinx_and_start():
+            with patch("sphinx.application.EventManager", EventManager):
                 app = Sphinx(
                     srcdir=self.target_path,
                     confdir=self.target_path,
@@ -532,13 +518,13 @@ class ProjectEnv:
 
         if use_runtime:
             with cProfile.Profile() as profile:
-                instantiate_sphinx_and_start()
+                init_sphinx_and_start()
 
         status_code = 0
         if use_memray:
             memray_file = memray.FileDestination(path=MEMORY_PROFILE, overwrite=True)
             with memray.Tracker(destination=memray_file):
-                status_code = instantiate_sphinx_and_start()
+                status_code = init_sphinx_and_start()
 
         if use_memray_live:
             console.print(
@@ -548,14 +534,14 @@ class ProjectEnv:
             )
             memray_port = memray.SocketDestination(server_port=MEMRAY_PORT)
             with memray.Tracker(destination=memray_port):
-                status_code = instantiate_sphinx_and_start()
+                status_code = init_sphinx_and_start()
 
         if use_pyinstrument:
             profiler = Profiler()
             import inspect
 
             profiler.start(caller_frame=inspect.currentframe().f_back)
-            status_code = instantiate_sphinx_and_start()
+            status_code = init_sphinx_and_start()
             profile = profiler.stop()  # Returns a pyinstrument session
 
         end_time = time.time()
