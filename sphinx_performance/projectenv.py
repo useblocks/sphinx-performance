@@ -11,11 +11,13 @@ import time
 import webbrowser
 from contextlib import suppress
 from pathlib import Path
+from unittest.mock import patch
 
 import memray
 from jinja2 import Template
 from pyinstrument import Profiler
 from sphinx.application import Sphinx
+from sphinx.events import EventManager
 
 from sphinx_performance.config import MEMORY_PROFILE, MEMRAY_PORT
 from sphinx_performance.utils import console
@@ -501,16 +503,30 @@ class ProjectEnv:
             self.build_config["keep"] = True
 
         start_time = time.time()
+
         def instantiate_sphinx_and_start():
-            app = Sphinx(
-                srcdir=self.target_path,
-                confdir=self.target_path,
-                outdir=self.target_build_path,
-                doctreedir=self.target_build_path,
-                buildername=str(self.build_config["builder"]),
-                parallel=int(self.build_config["parallel"]),
-            )
-            return app.build()
+            class MockEventManager(EventManager):
+                def emit_new(self, *args, **kwargs):
+                    return self.emit_orig(*args, **kwargs)
+
+                def __init__(self, *args, **kwargs) -> None:
+                    super().__init__(*args, **kwargs)
+                    # Every instance of MockFoo will now have its `foo` method
+                    # wrapped in a MagicMock
+                    self.emit_orig = self.emit
+                    self.emit = self.emit_new
+
+            with patch("sphinx.application.EventManager", MockEventManager):
+                app = Sphinx(
+                    srcdir=self.target_path,
+                    confdir=self.target_path,
+                    outdir=self.target_build_path,
+                    doctreedir=self.target_build_path,
+                    buildername=str(self.build_config["builder"]),
+                    parallel=int(self.build_config["parallel"]),
+                )
+                return app.build()
+
         if use_runtime:
             with cProfile.Profile() as profile:
                 instantiate_sphinx_and_start()
@@ -519,7 +535,7 @@ class ProjectEnv:
         if use_memray:
             memray_file = memray.FileDestination(path=MEMORY_PROFILE, overwrite=True)
             with memray.Tracker(destination=memray_file):
-                status_code =instantiate_sphinx_and_start()
+                status_code = instantiate_sphinx_and_start()
 
         if use_memray_live:
             console.print(
