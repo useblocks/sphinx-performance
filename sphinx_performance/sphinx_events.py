@@ -3,9 +3,15 @@ Configuration to find Sphinx events sent to listeners/extensions.
 
 The goal is to enable extension specific profiling reports.
 """
+
+from __future__ import annotations
+
+from pathlib import Path
+
+from sphinx.events import EventManager as EventManagerOrig
+
 # ruff: noqa: ANN002
 #             (missing-type-args - type depends on event, however emit is generic)
-from sphinx.events import EventManager as EventManagerOrig
 
 
 class EventManager(EventManagerOrig):
@@ -84,6 +90,27 @@ class EventManager(EventManagerOrig):
         return super().emit(*args, **kwargs)
 
 
+events = [
+    "builder-inited",
+    "config-inited",
+    "env-get-outdated",
+    "env-purge-doc",
+    "env-before-read-docs",
+    "source-read",
+    "object-description-transform",
+    "doctree-read",
+    "missing-reference",
+    "warn-missing-reference",
+    "doctree-resolved",
+    "env-merge-info",
+    "env-updated",
+    "env-check-consistency",
+    "html-collect-pages",
+    "html-page-context",
+    "linkcheck-process-uri",
+    "build-finished",
+]
+
 frame_parents_by_event = {
     "builder-inited": [
         "Sphinx.__init__",
@@ -95,7 +122,9 @@ frame_parents_by_event = {
     "env-get-outdated": [],
     "env-purge-doc": [],
     "env-before-read-docs": [],
-    "source-read": [],
+    "source-read": [
+        "EventManager.emit_source_read",
+    ],
     "object-description-transform": [],
     "doctree-read": [],
     "missing-reference": [],
@@ -116,5 +145,70 @@ frame_parents_by_event = {
 event_frame = "EventManager.emit"
 
 
-def patch_json_renderer(json_render_data):
-    pass
+def aggregate_event_runtime(json_render_data):
+    """Filter JSON tree for Sphinx events and add up the consumption time of subpackages."""
+    event_functions_frames = {}
+    for event in events:
+        event_functions_frames[event] = [
+            f"EventManager.emit_{event.replace('-', '_')}",
+            "EventManager.emit",
+        ]
+    out_obj = {}
+    active_events = {}
+    filter_frame_tree(
+        json_render_data["root_frame"],
+        event_functions_frames,
+        active_events,
+        out_obj,
+    )
+    return out_obj
+
+
+def filter_frame_tree(
+    data_obj: dict[str, dict],
+    frames_by_event: dict[str, list],
+    active_events,
+    out_obj,
+):
+    """
+    Recursively walk the JSON tree looking for event related functions.
+
+    All sub-package (extension) invocations are aggregated for the event.
+    """
+    if "class_name" in data_obj:
+        data_obj_qualifier = f"{data_obj['class_name']}.{data_obj['function']}"
+    else:
+        data_obj_qualifier = data_obj["function"]
+    for event, frames in active_events.items():
+        if data_obj_qualifier == frames[0]:
+            # remove the frame
+            active_events[event] = frames[1:]
+        else:
+            # deactivate the event, not all frames matched
+            del active_events[event]
+
+    for event, frames in frames_by_event.items():
+        if event not in active_events and data_obj_qualifier == frames[0]:
+            active_events[event] = frames[1:]
+
+    collect_events = [
+        event for event, frames in active_events.items() if len(frames) == 0
+    ]
+    for event in collect_events:
+        if event not in out_obj:
+            out_obj[event] = {}
+        for child in data_obj["children"]:
+            if "class_name" in child:
+                out_qualifier = f"{child['class_name']}.{child['function']}"
+            else:
+                out_qualifier = child["function"]
+            library = Path(child["file_path_short"]).parts[0]
+            full_qualifier = f"{library}: {out_qualifier}"
+            if full_qualifier not in out_obj[event]:
+                out_obj[event][full_qualifier] = 0
+            out_obj[event][full_qualifier] += child["time"]
+        # event is handled, delete it
+        del active_events[event]
+
+    for child in data_obj["children"]:
+        filter_frame_tree(child, frames_by_event, active_events, out_obj)

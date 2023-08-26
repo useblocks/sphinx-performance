@@ -1,4 +1,5 @@
 """Executes several performance tests."""
+import json
 import os.path
 import subprocess
 import sys
@@ -8,11 +9,12 @@ from contextlib import suppress
 from pathlib import Path
 
 import click
-from pyinstrument.renderers import HTMLRenderer
+from pyinstrument.renderers import JSONRenderer
 
 from sphinx_performance.call import Call
 from sphinx_performance.config import MEMORY_HTML, MEMORY_PROFILE, RUNTIME_PROFILE
 from sphinx_performance.projectenv import ProjectEnv
+from sphinx_performance.renderers.html import HTMLRendererFromJson
 from sphinx_performance.utils import console
 
 
@@ -251,15 +253,28 @@ def cli_analysis(
             show_all = False
             processor_options["filter_threshold"] = tree_filter
 
-        html_data = HTMLRenderer(
+        json_str = JSONRenderer(
             show_all=show_all,
             processor_options=processor_options,
         ).render(
             all_profile,
         )
-        with Path.open("pyinstrument_profile.html", "w") as profile_html:
-            profile_html.write(html_data)
+        html_data = HTMLRendererFromJson(
+            show_all=show_all,
+            processor_options=processor_options,
+        ).render(
+            json_str,
+        )
+        with Path.open("pyinstrument_profile.html", "w") as events_json_file:
+            events_json_file.write(html_data)
             webbrowser.open_new_tab("pyinstrument_profile.html")
+
+        from sphinx_performance.sphinx_events import aggregate_event_runtime
+
+        json_obj = json.loads(json_str)
+        aggregate_json = aggregate_event_runtime(json_obj)
+        with Path.open("pyinstrument_sphinx_events.json", "w") as events_json_file:
+            json.dump(aggregate_json, events_json_file, indent=2, sort_keys=True)
 
     if flamegraph:
         if runtime:
