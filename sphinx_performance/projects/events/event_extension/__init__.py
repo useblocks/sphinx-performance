@@ -16,7 +16,7 @@ def wait_generic(event, ret_val=None):
     # generate event specific wait function name
     event_identifier = event.replace("-", "_")
     func_name = f"wait_{event_identifier}"
-    exec(
+    exec(  # noqa: S102 exec-builtin - wanted here
         f"""def {func_name}(*args, **kwargs):
         from time import sleep
         sleep(.1)

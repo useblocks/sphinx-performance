@@ -96,6 +96,7 @@ max-complexity = 20
 
 [tool.ruff.per-file-ignores]
 "sphinx_performance/projects/basic/performance.py" = ["INP001"] # template dir
+"sphinx_performance/projects/events/performance.py" = ["INP001"] # template dir
 "sphinx_performance/projects/needs/performance.py" = ["INP001"] # template dir
 "sphinx_performance/projects/theme/performance.py" = ["INP001"] # template dir
 
