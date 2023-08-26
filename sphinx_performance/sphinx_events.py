@@ -90,7 +90,7 @@ class EventManager(EventManagerOrig):
         return super().emit(*args, **kwargs)
 
 
-events = [
+EVENTS = [
     "builder-inited",
     "config-inited",
     "env-get-outdated",
@@ -111,48 +111,23 @@ events = [
     "build-finished",
 ]
 
-frame_parents_by_event = {
-    "builder-inited": [
-        "Sphinx.__init__",
-        "Sphinx._init_builder",
-    ],
-    "config-inited": [
-        "Sphinx.__init__",
-    ],
-    "env-get-outdated": [],
-    "env-purge-doc": [],
-    "env-before-read-docs": [],
-    "source-read": [
-        "EventManager.emit_source_read",
-    ],
-    "object-description-transform": [],
-    "doctree-read": [],
-    "missing-reference": [],
-    "warn-missing-reference": [],
-    "doctree-resolved": [],
-    "env-merge-info": [],
-    "env-updated": [],
-    "env-check-consistency": [],
-    "html-collect-pages": [],
-    "html-page-context": [],
-    "linkcheck-process-uri": [],
-    "build-finished": [
-        "Sphinx.build",
-        "",
-    ],
+# custom frames that shall also be collected
+# useful to also analyze runtime of plantuml extension or others that are called by
+# docutils
+CUSTOM_FRAMES_BY_EVENT = {
+    "Sphinx: html-renderer": ["HTML5Translator.dispatch_visit"],
 }
-
-event_frame = "EventManager.emit"
 
 
 def aggregate_event_runtime(json_render_data):
     """Filter JSON tree for Sphinx events and add up the consumption time of subpackages."""
     event_functions_frames = {}
-    for event in events:
+    for event in EVENTS:
         event_functions_frames[event] = [
             f"EventManager.emit_{event.replace('-', '_')}",
             "EventManager.emit",
         ]
+    event_functions_frames.update(CUSTOM_FRAMES_BY_EVENT)
     out_obj = {}
     active_events = {}
     filter_frame_tree(
@@ -195,18 +170,19 @@ def filter_frame_tree(
         event for event, frames in active_events.items() if len(frames) == 0
     ]
     for event in collect_events:
-        if event not in out_obj:
-            out_obj[event] = {}
+        key = f"Event: {event}" if event in EVENTS else event
+        if key not in out_obj:
+            out_obj[key] = {}
         for child in data_obj["children"]:
             if "class_name" in child:
                 out_qualifier = f"{child['class_name']}.{child['function']}"
             else:
                 out_qualifier = child["function"]
-            library = Path(child["file_path_short"]).parts[0]
-            full_qualifier = f"{library}: {out_qualifier}"
-            if full_qualifier not in out_obj[event]:
-                out_obj[event][full_qualifier] = 0
-            out_obj[event][full_qualifier] += child["time"]
+            Path(child["file_path_short"]).parts[0]
+            full_qualifier = f"{child['file_path_short']}: {out_qualifier}"
+            if full_qualifier not in out_obj[key]:
+                out_obj[key][full_qualifier] = 0
+            out_obj[key][full_qualifier] += child["time"]
         # event is handled, delete it
         del active_events[event]
 
