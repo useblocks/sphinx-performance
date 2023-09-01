@@ -154,13 +154,18 @@ def filter_frame_tree(
         data_obj_qualifier = f"{data_obj['class_name']}.{data_obj['function']}"
     else:
         data_obj_qualifier = data_obj["function"]
+
+    active_events_new = {}
+    """Stores events that are still active after checking the current frame."""
+
     for event, frames in active_events.items():
         if data_obj_qualifier == frames[0]:
             # remove the frame
-            active_events[event] = frames[1:]
+            active_events_new[event] = frames[1:]
         else:
-            # deactivate the event, not all frames matched
-            del active_events[event]
+            # remove the event, not all frames matched
+            pass
+    active_events = active_events_new
 
     for event, frames in frames_by_event.items():
         if event not in active_events and data_obj_qualifier == frames[0]:
