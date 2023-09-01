@@ -278,7 +278,7 @@ def cli_analysis(
             ).render(
                 json_str,
             )
-            with Path.open(Path("pyinstrument_profile.html"), "w") as events_json_file:
+            with Path("pyinstrument_profile.html").open("w") as events_json_file:
                 events_json_file.write(html_data)
                 webbrowser.open_new_tab("pyinstrument_profile.html")
 
@@ -287,10 +287,7 @@ def cli_analysis(
 
             json_obj = json.loads(json_str)
             aggregate_json = aggregate_event_runtime(json_obj)
-            with Path.open(
-                Path("pyinstrument_sphinx_events.json"),
-                "w",
-            ) as events_json_file:
+            with Path("pyinstrument_sphinx_events.json").open("w") as events_json_file:
                 json.dump(aggregate_json, events_json_file, indent=2, sort_keys=True)
 
     if flamegraph:
