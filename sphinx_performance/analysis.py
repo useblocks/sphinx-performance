@@ -140,6 +140,16 @@ from sphinx_performance.utils import console
         " time."
     ),
 )
+@click.option(
+    "--sphinx-events",
+    is_flag=True,
+    default=False,
+    help=(
+        "Generates a JSON runtime summary for each Sphinx event. Only usable if"
+        " --pyinstrument is given. This works by monkey patching the Sphinx"
+        " EventManager.emit function. The modification is visible in the call tree."
+    ),
+)
 @click.pass_context
 def cli_analysis(
     ctx,
@@ -161,6 +171,7 @@ def cli_analysis(
     temp,
     tree,
     tree_filter,
+    sphinx_events,
 ):
     """CLI analysis handling."""
     max_profile_cnt = 2
@@ -246,10 +257,10 @@ def cli_analysis(
                 if pyinstrument:
                     all_profile.save("pyinstrument_profile.json")
 
-    if pyinstrument and tree:
+    if pyinstrument and (tree or sphinx_events):
         processor_options = {}
         show_all = True
-        if tree_filter:
+        if tree and tree_filter:
             show_all = False
             processor_options["filter_threshold"] = tree_filter
 
@@ -259,22 +270,28 @@ def cli_analysis(
         ).render(
             all_profile,
         )
-        html_data = HTMLRendererFromJson(
-            show_all=show_all,
-            processor_options=processor_options,
-        ).render(
-            json_str,
-        )
-        with Path.open(Path("pyinstrument_profile.html"), "w") as events_json_file:
-            events_json_file.write(html_data)
-            webbrowser.open_new_tab("pyinstrument_profile.html")
 
-        from sphinx_performance.sphinx_events import aggregate_event_runtime
+        if tree:
+            html_data = HTMLRendererFromJson(
+                show_all=show_all,
+                processor_options=processor_options,
+            ).render(
+                json_str,
+            )
+            with Path.open(Path("pyinstrument_profile.html"), "w") as events_json_file:
+                events_json_file.write(html_data)
+                webbrowser.open_new_tab("pyinstrument_profile.html")
 
-        json_obj = json.loads(json_str)
-        aggregate_json = aggregate_event_runtime(json_obj)
-        with Path.open(Path("pyinstrument_sphinx_events.json"), "w") as events_json_file:
-            json.dump(aggregate_json, events_json_file, indent=2, sort_keys=True)
+        if sphinx_events:
+            from sphinx_performance.sphinx_events import aggregate_event_runtime
+
+            json_obj = json.loads(json_str)
+            aggregate_json = aggregate_event_runtime(json_obj)
+            with Path.open(
+                Path("pyinstrument_sphinx_events.json"),
+                "w",
+            ) as events_json_file:
+                json.dump(aggregate_json, events_json_file, indent=2, sort_keys=True)
 
     if flamegraph:
         if runtime:
