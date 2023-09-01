@@ -10,6 +10,9 @@ from typing import TYPE_CHECKING, Any
 if TYPE_CHECKING:
     from sphinx.application import Sphinx
 
+WAIT_TIME = 0.1
+"""Time to sleep for each registered event listener."""
+
 
 def wait_generic(event, ret_val=None):
     """Wait for a short time so debuggers see the event fired."""
@@ -19,7 +22,7 @@ def wait_generic(event, ret_val=None):
     exec(  # noqa: S102 exec-builtin - wanted here
         f"""def {func_name}(*args, **kwargs):
         from time import sleep
-        sleep(.1)
+        sleep({WAIT_TIME})
         # print("func '{func_name}' invoked for event '{event}'")
         return {ret_val}""",
     )
