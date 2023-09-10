@@ -234,6 +234,7 @@ def cli_analysis(
                     use_memray=memray,
                     use_memray_live=memray_live,
                     use_pyinstrument=pyinstrument,
+                    use_sphinx_events=sphinx_events,
                 )
 
                 console.print(
