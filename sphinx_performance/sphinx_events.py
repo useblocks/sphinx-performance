@@ -62,6 +62,9 @@ class EventManager(EventManagerOrig):
     def emit_doctree_read(self, *args, **kwargs):
         return super().emit(*args, **kwargs)
 
+    def emit_env_merge_info(self, *args, **kwargs):
+        return super().emit(*args, **kwargs)
+
     def emit_env_updated(self, *args, **kwargs):
         return super().emit(*args, **kwargs)
 
