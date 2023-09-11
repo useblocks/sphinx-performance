@@ -323,7 +323,8 @@ together with ``--pyinstrument --tree``.
 
 Generates a JSON runtime summary for each Sphinx event. Only usable if
 ``--pyinstrument`` is given. This works by monkey patching the Sphinx
-``EventManager.emit`` function. The modification is visible in the call tree.
+``EventManager.emit`` function, so the call tree reveals which Sphinx event got fired.
+The modification is visible in the call tree.
 
 The JSON output file ``pyinstrument_sphinx_events.json`` is generated into the
 current working directory.
