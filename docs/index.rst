@@ -34,6 +34,8 @@ It was created to answer questions like:
 * What are the performance bottlenecks during a Sphinx build?
 * What functions have an impact on the runtime?
 * Are there any memory problems?
+* How does my Sphinx extension perform?
+* What runtime is consumed by Sphinx events?
 
 To answer these questions, **two commandline tools** are provided:
 

@@ -114,10 +114,16 @@ EVENTS = [
     "build-finished",
 ]
 
-# custom frames that shall also be collected
-# useful to also analyze runtime of plantuml extension or others that are called by
-# docutils
-CUSTOM_FRAMES_BY_EVENT = {
+# Custom frames that shall also be collected. Any pyinstrument tree nodes can be added
+# here, so the JSON can be used to get quick information for any Sphinx build step.
+# Just like for events, the output JSON will contain unique function runtimes
+# of all nodes below the given frame. The dictionary keys will be used also in the
+# output JSON for humans to understand what it is.
+# The feature can be used to also analyze runtime of extensions that are not called
+# through the Sphinx event system, but by docutils, e.g. sphinxcontrib-plantuml.
+# When running in a CI context, the output JSON can be used to quickly see performance
+# problems or improvements introduced by new PRs.
+CUSTOM_FRAMES_BY_REPORT_NAME = {
     "Sphinx: html-renderer": ["HTML5Translator.dispatch_visit"],
 }
 
@@ -130,7 +136,7 @@ def aggregate_event_runtime(json_render_data):
             f"EventManager.emit_{event.replace('-', '_')}",
             "EventManager.emit",
         ]
-    event_functions_frames.update(CUSTOM_FRAMES_BY_EVENT)
+    event_functions_frames.update(CUSTOM_FRAMES_BY_REPORT_NAME)
     out_obj = {}
     active_events = {}
     filter_frame_tree(
