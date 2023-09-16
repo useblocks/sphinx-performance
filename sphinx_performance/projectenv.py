@@ -11,6 +11,7 @@ import time
 import webbrowser
 from contextlib import suppress
 from pathlib import Path
+from unittest.mock import patch
 
 import memray
 from jinja2 import Template
@@ -18,6 +19,7 @@ from pyinstrument import Profiler
 from sphinx.application import Sphinx
 
 from sphinx_performance.config import MEMORY_PROFILE, MEMRAY_PORT
+from sphinx_performance.sphinx_events import EventManager
 from sphinx_performance.utils import console
 
 NEED_CONFIG_DEFAULT = ["pages", "folders", "depth"]
@@ -489,6 +491,7 @@ class ProjectEnv:
         use_memray_live=False,
         use_runtime=False,
         use_pyinstrument=False,
+        use_sphinx_events=False,
     ):
         """
         Build sphinx project via the Sphinx API call.
@@ -501,22 +504,34 @@ class ProjectEnv:
             self.build_config["keep"] = True
 
         start_time = time.time()
-        app = Sphinx(
-            srcdir=self.target_path,
-            confdir=self.target_path,
-            outdir=self.target_build_path,
-            doctreedir=self.target_build_path,
-            buildername=str(self.build_config["builder"]),
-            parallel=int(self.build_config["parallel"]),
-        )
+
+        def init_sphinx_and_start_wrap():
+            def init_sphinx_and_start():
+                app = Sphinx(
+                    srcdir=self.target_path,
+                    confdir=self.target_path,
+                    outdir=self.target_build_path,
+                    doctreedir=self.target_build_path,
+                    buildername=str(self.build_config["builder"]),
+                    parallel=int(self.build_config["parallel"]),
+                )
+                return app.build()
+
+            if use_sphinx_events:
+                with patch("sphinx.application.EventManager", EventManager):
+                    return init_sphinx_and_start()
+            else:
+                return init_sphinx_and_start()
+
         if use_runtime:
             with cProfile.Profile() as profile:
-                app.build()
+                init_sphinx_and_start_wrap()
 
+        status_code = 0
         if use_memray:
             memray_file = memray.FileDestination(path=MEMORY_PROFILE, overwrite=True)
             with memray.Tracker(destination=memray_file):
-                app.build()
+                status_code = init_sphinx_and_start_wrap()
 
         if use_memray_live:
             console.print(
@@ -526,19 +541,19 @@ class ProjectEnv:
             )
             memray_port = memray.SocketDestination(server_port=MEMRAY_PORT)
             with memray.Tracker(destination=memray_port):
-                app.build()
+                status_code = init_sphinx_and_start_wrap()
 
         if use_pyinstrument:
             profiler = Profiler()
             import inspect
 
             profiler.start(caller_frame=inspect.currentframe().f_back)
-            app.build()
+            status_code = init_sphinx_and_start_wrap()
             profile = profiler.stop()  # Returns a pyinstrument session
 
         end_time = time.time()
         build_time = end_time - start_time
-        return app.statuscode, build_time, profile
+        return status_code, build_time, profile
 
     def post_processing(self):
         if self.build_config["browser"]:

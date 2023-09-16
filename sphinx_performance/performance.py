@@ -16,6 +16,7 @@ from sphinx_performance.utils import console
 
 PROJECTS = {
     "basic": Path(Path(__file__).parent) / "projects" / "basic",
+    "events": Path(Path(__file__).parent) / "projects" / "events",
     "needs": Path(Path(__file__).parent) / "projects" / "needs",
     "theme": Path(Path(__file__).parent) / "projects" / "theme",
 }

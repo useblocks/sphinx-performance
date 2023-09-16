@@ -1,0 +1,28 @@
+{{ title}}
+{{ "=" * title|length }}
+
+Config
+------
+:pages: {{pages}}
+:dummies: {{dummies}}
+:keep: {{keep}}
+:browser: {{browser}}
+:debug: {{debug}}
+
+Content
+-------
+.. contents::
+
+.. toctree::
+
+{%- for page in range(pages) %}
+   page_{{page}}
+{%- endfor -%}
+
+{%- if has_folders %}
+{%- for folder in range(folders) %}
+   folder_{{folder}}/index
+{%- endfor -%}
+{% endif %}
+
+This is a :ref:`missing` reference.
