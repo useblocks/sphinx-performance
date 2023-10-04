@@ -98,8 +98,8 @@ class ProjectEnv:
             )
             per_conf = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(per_conf)
-        except ImportError:
-            console.print("performance.py file could not be imported: {e}")
+        except ImportError as exc:
+            console.print(f"performance.py file could not be imported: {exc}")
             return False
 
         ref_params = per_conf.references
